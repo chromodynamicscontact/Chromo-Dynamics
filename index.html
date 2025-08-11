@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Chromo Dynamics - La Scuderia Virtuale del Futuro</title>
+  <link href="https://fonts.googleapis.com/css2?family=Russo+One&family=Roboto:wght@300;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://unpkg.com/aos@2.3.4/dist/aos.css" rel="stylesheet">
+  <style>
+    html { scroll-behavior: smooth; }
+    body { background-color: #f0f9ff; color: #222; font-family: 'Roboto', sans-serif; }
+    .hero-bg { background: linear-gradient(135deg, #00ccff, #99ebff); }
+    .section-title { font-family: 'Russo One', sans-serif; letter-spacing: 1px; }
+    .nav-link { color: #1e90ff; text-decoration: none; font-weight: 600; margin-left: 1rem; }
+    .card { background: white; border-radius: 8px; padding: 1.25rem; box-shadow: 0 6px 18px rgba(20,40,80,0.06); }
+    .btn-primary { background: #ffffff; color: #1e90ff; padding: .75rem 1.25rem; border-radius: 999px; font-weight:700; }
+    .btn-ghost { background: #1e90ff; color: #fff; padding: .75rem 1.25rem; border-radius: 999px; font-weight:700; }
+    header nav { display:flex; align-items:center; justify-content:space-between; padding: 1rem 2rem; }
+    @media (max-width: 768px) { header nav { flex-direction:column; gap: 1rem; } .nav-right{display:none;} }
+  </style>
+</head>
+
+<body class="antialiased" data-aos-easing="ease-in-out" data-aos-duration="800">
+  <!-- Header / Navbar (preservato dal file originale) -->
+  <header class="bg-white sticky top-0 z-50 shadow-sm">
+    <nav class="container mx-auto flex items-center justify-between">
+      <div style="display:flex;align-items:center;gap:.75rem;">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none"><path d="M3 12h18" stroke="#1e90ff" stroke-width="2" stroke-linecap="round"/></svg>
+        <span style="font-weight:700;color:#1e90ff;font-family:'Russo One',sans-serif;font-size:1.15rem;">Chromo Dynamics</span>
+      </div>
+      <div class="nav-right">
+        <a class="nav-link" href="#home">Home</a>
+        <a class="nav-link" href="#ecosistema">Ecosistema</a>
+        <a class="nav-link" href="#presentazione">Presentazione</a>
+        <a class="nav-link" href="#eventi">Eventi</a>
+        <a class="nav-link" href="#team">Team</a>
+        <a class="nav-link" href="#manifesto">Manifesto</a>
+        <a class="nav-link" href="#contatti">Contatti</a>
+      </div>
+    </nav>
+  </header>
+
+  <!-- Hero (preservato) -->
+  <section id="home" class="hero-bg text-white py-24 text-center" data-aos="fade-down">
+    <h1 class="text-5xl font-bold section-title mb-4">La Scuderia del Futuro</h1>
+    <p class="text-lg max-w-3xl mx-auto">Competizione virtuale. Passione reale. Benvenuto in Chromo Dynamics — dove tecnologia, stile e comunità si incontrano per reinventare il motorsport per chi non se lo puo permettere.</p>
+    <div class="mt-8 flex justify-center gap-4">
+      <a href="#eventi" class="btn-primary">Scopri gli Eventi</a>
+      <a href="#presentazione" class="btn-ghost">La Nostra Visione</a>
+    </div>
+  </section>
+
+  <!-- Ecosistema (preservato) -->
+  <section id="ecosistema" class="py-16 container mx-auto px-6" data-aos="fade-up">
+  <h2 class="text-3xl text-blue-600 font-bold section-title mb-6">Il Nostro Ecosistema</h2>
+  <div class="grid md:grid-cols-4 gap-6">
+    <div class="card text-center" data-aos="zoom-in">
+      <svg xmlns="http://www.w3.org/2000/svg" class="mx-auto" width="28" height="28" fill="none" stroke="#1e90ff" stroke-width="2" viewBox="0 0 24 24">
+        <path d="M12 6v6h4M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0z"/>
+      </svg>
+      <h3 class="font-bold mt-4">Obiettivi</h3>
+      <p class="text-gray-600 mt-2">Competere al massimo livello in ogni categoria virtuale, con risultati misurabili e crescita continua.</p>
+    </div>
+    <div class="card text-center" data-aos="zoom-in" data-aos-delay="100">
+      <svg xmlns="http://www.w3.org/2000/svg" class="mx-auto" width="28" height="28" fill="none" stroke="#1e90ff" stroke-width="2" viewBox="0 0 24 24">
+        <path d="M17 21v-2a4 4 0 0 0-3-3.87M7 21v-2a4 4 0 0 1 3-3.87m4-6a4 4 0 1 1-8 0 4 4 0 0 1 8 0z"/>
+        <path d="M21 21v-2a4 4 0 0 0-3-3.87M21 10a4 4 0 1 1-8 0 4 4 0 0 1 8 0z"/>
+      </svg>
+      <h3 class="font-bold mt-4">Community</h3>
+      <p class="text-gray-600 mt-2">Costruire relazioni durature: eventi, forum, live e attività che uniscono giocatori e appassionati.</p>
+    </div>
+    <div class="card text-center" data-aos="zoom-in" data-aos-delay="200">
+      <svg xmlns="http://www.w3.org/2000/svg" class="mx-auto" width="28" height="28" fill="none" stroke="#1e90ff" stroke-width="2" viewBox="0 0 24 24">
+        <path d="M8 21h8M12 17a5 5 0 0 1-5-5V5h10v7a5 5 0 0 1-5 5z"/>
+      </svg>
+      <h3 class="font-bold mt-4">Eventi</h3>
+      <p class="text-gray-600 mt-2">Organizzare gare creative e spettacolari, con regole chiare e premi per il merito.</p>
+    </div>
+    <div class="card text-center" data-aos="zoom-in" data-aos-delay="300">
+      <svg xmlns="http://www.w3.org/2000/svg" class="mx-auto" width="28" height="28" fill="none" stroke="#1e90ff" stroke-width="2" viewBox="0 0 24 24">
+        <path d="M12 3v2m6.364 1.636-1.414 1.414M21 12h-2M17.364 17.364l-1.414-1.414M12 19v2M6.636 17.364l1.414-1.414M3 12h2M6.636 6.636l1.414 1.414"/>
+      </svg>
+      <h3 class="font-bold mt-4">Innovazione</h3>
+      <p class="text-gray-600 mt-2">Sperimentare nuove formule: gamification, integrazioni AR/VR e partnership tecnologiche.</p>
+    </div>
+  </div>
+</section>
+
+  <!-- Presentazione (preservato) -->
+  <section id="presentazione" class="py-16 bg-blue-50 px-6" data-aos="fade-up">
+    <div class="container mx-auto">
+      <h2 class="text-3xl text-blue-600 font-bold section-title mb-6">Presentazione Ufficiale</h2>
+      <div class="card">
+        <p class="text-lg leading-relaxed"><svg xmlns="http://www.w3.org/2000/svg" class="inline" width="20" height="20" fill="none" stroke="#1e90ff" stroke-width="2" viewBox="0 0 24 24"><path d="M12 2C10 5 7 6 7 10a5 5 0 0 0 10 0c0-4-3-5-5-8z"/><path d="M12 22a5 5 0 0 1-5-5 5 5 0 0 1 10 0 5 5 0 0 1-5 5z"/></svg> <strong>Nome del Team:</strong> Chromo Dynamics</p>
+        <p class="text-lg leading-relaxed"><svg xmlns="http://www.w3.org/2000/svg" class="inline" width="20" height="20" fill="none" stroke="#1e90ff" stroke-width="2" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3"/><path d="M22 4 12 14.01l-3-3"/></svg> <strong>Fondazione:</strong> 2025</p>
+        <p class="text-lg leading-relaxed"><svg xmlns="http://www.w3.org/2000/svg" class="inline" width="20" height="20" fill="none" stroke="#1e90ff" stroke-width="2" viewBox="0 0 24 24"><path d="M8 21h8M12 17a5 5 0 0 1-5-5V5h10v7a5 5 0 0 1-5 5z"/><path d="M5 5V3h14v2"/></svg> <strong>Identità:</strong> Scuderia virtuale multi-categoria con focus su creatività, competizione e comunità.</p>
+        <p class="mt-4 text-gray-700">La missione è creare un ecosistema che vada oltre la gara: vogliamo promuovere talenti, valorizzare la creatività nelle livree e offrire eventi che combinino spettacolo e competizione.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Video/Trailer aggiunto -->
+  <section id="video" class="py-16 container mx-auto px-6" data-aos="fade-up">
+    <h2 class="text-3xl text-blue-600 font-bold section-title mb-6">Trailer Ufficiale</h2>
+    <div class="card">
+      <p class="text-gray-700">Guarda il trailer ufficiale della scuderia. Se vuoi sostituire il video con uno specifico, mandami l'URL e lo metto.</p>
+      <div class="video-wrap" style="margin-top:.75rem">
+        <iframe id="trailer" src="https://www.youtube.com/embed/M7lc1UVf-VE" title="Chromo Dynamics Trailer" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+      </div>
+    </div>
+  </section>
+
+  <!-- Eventi (preservato) -->
+  <section id="eventi" class="py-16 container mx-auto px-6" data-aos="fade-up">
+    <h2 class="text-3xl text-blue-600 font-bold section-title mb-6">Eventi & Gare</h2>
+    <div class="grid md:grid-cols-2 gap-6">
+      <div class="card" data-aos="fade-right">
+        <h3 class="text-xl font-bold">Formula Goals Grand Prix</h3>
+        <p class="text-gray-700"><svg xmlns="http://www.w3.org/2000/svg" class="inline" width="20" height="20" fill="none" stroke="#1e90ff" stroke-width="2" viewBox="0 0 24 24"><path d="M8 2v4M16 2v4M3 10h18M4 6h16a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1z"/></svg> 20 Agosto 2025 — Un campionato che unisce precisione e spettacolo. I piloti si sfidano su una serie di piste selezionate con telemetria live, replay e analisi dati post-gara.</p>
+        <p class="mt-2 text-gray-600"><strong>Formato:</strong> Qualifiche + Sprint + Gara Principale. <strong>Premi:</strong> Crediti, livree esclusive e opportunità di collaborazione.</p>
+      </div>
+      <div class="card" data-aos="fade-left">
+        <h3 class="text-xl font-bold">GP Virtuale di Neon City</h3>
+        <p class="text-gray-700"><svg xmlns="http://www.w3.org/2000/svg" class="inline" width="20" height="20" fill="none" stroke="#1e90ff" stroke-width="2" viewBox="0 0 24 24"><path d="M8 2v4M16 2v4M3 10h18M4 6h16a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1z"/></svg> 8 Agosto 2025 — Gara notturna futuristica. Luci, neon e sfide a visibilità ridotta. <strong>Sfida extra:</strong> Livrea più luminosa = +5 punti.</p>
+        <p class="mt-2 text-gray-600">Evento con scoring basato su velocità, stile e strategia di pit-stop virtuali.</p>
+      </div>
+      <div class="card" data-aos="fade-right">
+        <h3 class="text-xl font-bold">Motorsport Cup</h3>
+        <p class="text-gray-700"><svg xmlns="http://www.w3.org/2000/svg" class="inline" width="20" height="20" fill="none" stroke="#1e90ff" stroke-width="2" viewBox="0 0 24 24"><path d="M8 2v4M16 2v4M3 10h18M4 6h16a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1z"/></svg> 15 Settembre 2025 — Serie endurance e rallycross. Team composti da 2-4 piloti, con classifica a punti cumulativa.</p>
+      </div>
+      <div class="card" data-aos="fade-left">
+        <h3 class="text-xl font-bold">Chromo Invitational</h3>
+        <p class="text-gray-700"><svg xmlns="http://www.w3.org/2000/svg" class="inline" width="20" height="20" fill="none" stroke="#1e90ff" stroke-width="2" viewBox="0 0 24 24"><path d="M8 2v4M16 2v4M3 10h18M4 6h16a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1z"/></svg> 10 Ottobre 2025 — Evento esclusivo su invito: showmatch, reveal e ospiti speciali.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Leaderboard dinamica aggiunta -->
+  <section id="leaderboard" class="py-16 container mx-auto px-6" data-aos="fade-up">
+    <h2 class="text-3xl text-blue-600 font-bold section-title mb-6">Leaderboard - Classifica</h2>
+    <div class="card leaderboard">
+      <p class="text-gray-700">Classifica attuale dei piloti. I dati sono aggiornabili tramite il pannello JS sotto (vedi README nella cartella ZIP).</p>
+      <table id="board-table" style="width:100%;border-collapse:collapse;margin-top:.75rem">
+        <thead><tr style="text-align:left"><th>Pos</th><th>Pilota</th><th>Punti</th><th>Vittorie</th></tr></thead>
+        <tbody></tbody>
+      </table>
+      <div style="margin-top:.75rem;display:flex;gap:.5rem;flex-wrap:wrap;align-items:center">
+        <button class="btn btn-primary" onclick="sortLeaderboard('points')">Ordina per Punti</button>
+        <button class="btn btn-primary" onclick="sortLeaderboard('wins')">Ordina per Vittorie</button>
+        <button class="btn btn-primary" onclick="resetLeaderboard()">Reset</button>
+        <button class="btn btn-primary" onclick="simulateUpdate()">Simula Update</button>
+        <div style="margin-left:auto" class="muted">Aggiornamento live simulato</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Storia, Visione, Collaborazioni, Community, Merchandising (preservati) -->
+  <section class="py-16 container mx-auto px-6" data-aos="fade-up">
+    <h2 class="text-3xl text-blue-600 font-bold section-title mb-6">La Nostra Storia</h2>
+    <div class="card">
+      <p class="text-lg leading-relaxed">Chromo Dynamics nasce da una community di amici appassionati di racing. Partiti da gare amatoriali su simulatori, abbiamo maturato l'ambizione di diventare una scuderia completa e riconosciuta. Ogni evento test è stato un passo verso la professionalizzazione, aiutandoci a definire regole, format e strumenti di gestione.</p>
+      <p class="mt-3 text-lg leading-relaxed">Le prime collaborazioni ci hanno permesso di investire in grafiche, broadcast e premi per i partecipanti. La storia è appena cominciata: il futuro è di chi osa costruirlo.</p>
+    </div>
+  </section>
+
+  <section class="bg-blue-50 py-16 px-6" data-aos="fade-up">
+    <div class="container mx-auto">
+      <h2 class="text-3xl text-blue-600 font-bold section-title mb-6">Visione 2025–2030</h2>
+      <ul class="list-disc list-inside text-lg">
+        <li>Accademia virtuale per piloti emergenti con corsi e mentorship.</li>
+        <li>Partecipazione a eventi internazionali e partnership con team reali.</li>
+        <li>Sviluppo di tecnologie e tool per analisi telemetria e ottimizzazione.</li>
+        <li>Linea ufficiale di merchandising per fan e piloti.</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="py-16 container mx-auto px-6" data-aos="fade-up">
+    <h2 class="text-3xl text-blue-600 font-bold section-title mb-6">Collaborazioni & Sponsor</h2>
+    <div class="card">
+      <p class="text-lg leading-relaxed">Siamo aperti a collaborazioni con brand che credono nell'innovazione: tecnologie hardware, software, aziende automotive e realtà creative. Offriamo visibilità, format personalizzati e attivazioni digitali per coinvolgere la community.</p>
+    </div>
+  </section>
+
+  <section class="bg-blue-50 py-16 px-6" data-aos="fade-up">
+    <div class="container mx-auto">
+      <h2 class="text-3xl text-blue-600 font-bold section-title mb-6">La Nostra Community</h2>
+      <div class="card">
+        <p class="text-lg leading-relaxed">La Chromo Crew è il cuore del progetto: giocatori, streamer, creativi e partner che lavorano insieme per amplificare eventi e progetti. Organizziamo weekly meet, AMA, e workshop creativi per coinvolgere i membri.</p>
+      </div>
+    </section>
+
+  <section class="py-16 container mx-auto px-6" data-aos="fade-up">
+    <h2 class="text-3xl text-blue-600 font-bold section-title mb-6">Merchandising</h2>
+    <div class="card">
+      <p class="text-lg leading-relaxed">La linea Chromo Dynamics includerà capi sportivi, cappellini, adesivi e accessori digitali per avatar. Ogni prodotto rifletterà il nostro stile: audace, digitale e luminoso.</p>
+    </div>
+  </section>
+
+  <!-- Team (preservato) -->
+  <section id="team" class="py-16 container mx-auto px-6" data-aos="fade-up">
+    <h2 class="text-3xl text-blue-600 font-bold section-title mb-6">Il Nostro Team</h2>
+    <div class="grid md:grid-cols-3 gap-6">
+      <div class="card text-center">
+        <h3 class="font-bold text-xl">Shon Mollah</h3>
+        <p class="text-gray-600">Founder & CEO</p>
+        <p class="text-sm text-gray-500 mt-2">Visionario, guida strategica e rappresentante ufficiale del progetto.</p>
+      </div>
+      <div class="card text-center">
+        <h3 class="font-bold text-xl">More Soon</h3>
+        <p class="text-gray-600">Team Manager</p>
+        <p class="text-sm text-gray-500 mt-2">Responsabile operativo e coordinator eventi.</p>
+      </div>
+      <div class="card text-center">
+        <h3 class="font-bold text-xl">Mattia Mameli</h3>
+        <p class="text-gray-600">Creative Director</p>
+        <p class="text-sm text-gray-500 mt-2">Design, comunicazione visiva e storytelling.</p>
+      </div>
+      <div class="card text-center">
+        <h3 class="font-bold text-xl">Koyshika Mollah</h3>
+        <p class="text-gray-600">Creative Director</p>
+        <p class="text-sm text-gray-500 mt-2">Concept, livree e direzione artistica.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Goals & Obiettivi (preservato) -->
+  <section class="py-16 container mx-auto px-6" data-aos="fade-up">
+    <h2 class="text-3xl text-blue-600 font-bold section-title mb-6">Goals (Obiettivi e Risultati)</h2>
+    <div class="card">
+      <ol class="list-decimal list-inside text-lg">
+        <li>Raggiungere 1.000 membri attivi nella community entro 12 mesi.</li>
+        <li>Organizzare almeno 6 eventi ufficiali nel primo anno.</li>
+        <li>Stringere almeno 3 partnership commerciali rilevanti.</li>
+        <li>Lanciare la prima linea di merchandising entro 18 mesi.</li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- Contatti aggiornati -->
+  <section id="contatti" class="py-16 bg-blue-50 px-6" data-aos="fade-up">
+    <div class="container mx-auto">
+      <h2 class="text-3xl text-blue-600 font-bold section-title mb-6">Contattaci</h2>
+      <div class="card">
+        <p class="text-lg leading-relaxed">Per collaborazioni, sponsor o info: <strong>email: ChromoDynamicsContact@gmail.com</strong> — oppure contattaci su WhatsApp o YouTube tramite i link rapidi.</p>
+        <div style="margin-top:.75rem;display:flex;gap:.5rem;flex-wrap:wrap">
+          <a class="btn btn-primary" href="mailto:ChromoDynamicsContact@gmail.com">Invia Email</a>
+          <a class="btn btn-primary" href="https://chat.whatsapp.com/JbOkIYeFqA3GvaMIey7PG2" target="_blank" rel="noopener">Apri WhatsApp</a>
+          <a class="btn btn-primary" href="https://www.youtube.com/@ChromoDynamicsOfficial" target="_blank" rel="noopener">Canale YouTube</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ (preservato) -->
+  <section class="py-16 container mx-auto px-6" data-aos="fade-up">
+    <h2 class="text-3xl text-blue-600 font-bold section-title mb-6">FAQ</h2>
+    <div class="card">
+      <p><strong>Come posso partecipare alle gare?</strong> — Registrati alla nostra community e segui gli annunci nella sezione eventi.</p>
+      <p class="mt-3"><strong>Il team è reale?</strong> — Siamo una scuderia virtuale con obiettivi reali, e vogliamo crescere fino a diventare anche su pista reale.</p>
+    </div>
+  </section>
+
+  <!-- Footer (preservato) -->
+  <footer class="bg-white text-center text-gray-600 py-8 border-t">
+    <div class="container mx-auto">
+      <p class="mb-2">© 2025 Chromo Dynamics – Tutti i diritti riservati.</p>
+      <p class="text-sm text-gray-500">Questo sito è una demo progettuale. Alcuni riferimenti (email, link) sono esemplificativi.</p>
+    </div>
+  
+<section id="roblox" class="py-16 bg-blue-50 px-6" data-aos="fade-up">
+  <div class="container mx-auto">
+    <h2 class="text-3xl text-blue-600 font-bold section-title mb-6">Chromo Dynamics su Roblox</h2>
+    <div class="card">
+      <p class="text-lg leading-relaxed">
+        La nostra scuderia virtuale si espande nel mondo di Roblox, portando eventi esclusivi, gare mozzafiato e sfide competitive direttamente nella piattaforma di gioco più creativa al mondo.
+      </p>
+      <h3 class="mt-6 font-bold flex items-center">
+        <svg xmlns="http://www.w3.org/2000/svg" class="inline mr-2" width="20" height="20" fill="none" stroke="#1e90ff" stroke-width="2" viewBox="0 0 24 24">
+          <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
+        </svg> Perché ti chiediamo il tuo username Roblox?
+      </h3>
+      <ul class="list-disc pl-6 mt-2 text-gray-700">
+        <li>Per identificarti ufficialmente come membro o partecipante ai nostri eventi.</li>
+        <li>Per poterti aggiungere alle whitelist degli eventi privati.</li>
+        <li>Per garantire classifiche corrette e premi giusti a chi partecipa.</li>
+        <li>Per inviarti inviti esclusivi a gare e attività speciali.</li>
+      </ul>
+
+      <h3 class="mt-6 font-bold flex items-center">
+        <svg xmlns="http://www.w3.org/2000/svg" class="inline mr-2" width="20" height="20" fill="none" stroke="#1e90ff" stroke-width="2" viewBox="0 0 24 24">
+          <circle cx="12" cy="12" r="10"/><path d="M8 12h8M12 8v8"/>
+        </svg> Come funziona:
+      </h3>
+      <ol class="list-decimal pl-6 mt-2 text-gray-700">
+        <li>Compili il modulo con il tuo username Roblox e la tua email.</li>
+        <li>I tuoi dati vengono inviati direttamente al team Chromo Dynamics (alla nostra email ufficiale).</li>
+        <li>Ti invieremo conferma e, quando ci sarà un evento, riceverai orario, link e regolamento.</li>
+      </ol>
+
+      <h3 class="mt-6 font-bold flex items-center">
+        <svg xmlns="http://www.w3.org/2000/svg" class="inline mr-2" width="20" height="20" fill="none" stroke="#1e90ff" stroke-width="2" viewBox="0 0 24 24">
+          <path d="M9 19V6h13M9 6L4 10v8l5 4V6z"/>
+        </svg> Perché farlo?
+      </h3>
+      <ul class="list-disc pl-6 mt-2 text-gray-700">
+        <li>Accesso a eventi unici in Roblox organizzati da Chromo Dynamics.</li>
+        <li>Possibilità di vincere riconoscimenti, punti in classifica e premi speciali.</li>
+        <li>Essere parte di una community appassionata di motorsport virtuale e creatività.</li>
+      </ul>
+
+      <p class="mt-4 text-red-600 font-bold flex items-center">
+        <svg xmlns="http://www.w3.org/2000/svg" class="inline mr-2" width="20" height="20" fill="none" stroke="#ff0000" stroke-width="2" viewBox="0 0 24 24">
+          <path d="M12 9v2m0 4h.01M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0z"/>
+        </svg> I posti agli eventi sono limitati: registrati ora per non perdere il prossimo appuntamento in pista!
+      </p>
+
+      <!-- Modulo di registrazione Roblox -->
+      <form action="https://formspree.io/f/mjkvjqvq" method="POST" class="mt-6 space-y-4">
+        <div>
+          <label for="roblox-username" class="block font-bold text-gray-700">Username Roblox</label>
+          <input type="text" id="roblox-username" name="roblox_username" required class="w-full border border-gray-300 rounded px-4 py-2" placeholder="Inserisci il tuo username Roblox">
+        </div>
+        <div>
+          <label for="email" class="block font-bold text-gray-700">Email</label>
+          <input type="email" id="email" name="email" required class="w-full border border-gray-300 rounded px-4 py-2" placeholder="Inserisci la tua email">
+        </div>
+        <button type="submit" class="btn-ghost">Registrati</button>
+      </form>
+    </div>
+  </div>
+</section>
+</footer>
+
+  <!-- Script: AOS + Leaderboard dynamic JS + contact form via mailto -->
+  <script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
+  <script>
+    AOS.init();
+
+    // Leaderboard data (puoi modificare qui)
+    const leaderboardData = [
+      {name: "NeoRacer", points: 124, wins: 5},
+      {name: "FlashGT", points: 112, wins: 4},
+      {name: "Aurora", points: 98, wins: 2},
+      {name: "Velocity", points: 87, wins: 1},
+      {name: "Lumina", points: 75, wins: 0}
+    ];
+
+    // Render table
+    function renderLeaderboard(data){
+      const tbody = document.querySelector('#board-table tbody');
+      tbody.innerHTML = '';
+      data.forEach((p,i)=>{
+        const tr = document.createElement('tr');
+        tr.innerHTML = `<td>${i+1}</td><td>${p.name}</td><td>${p.points}</td><td>${p.wins}</td>`;
+        tbody.appendChild(tr);
+      });
+    }
+
+    // Initial render sorted by points desc
+    function sortByPointsDesc(a,b){ return b.points - a.points; }
+    leaderboardData.sort(sortByPointsDesc);
+    renderLeaderboard(leaderboardData);
+
+    // Sorting functions for buttons
+    function sortLeaderboard(mode){
+      const data = [...leaderboardData];
+      if(mode==='points') data.sort((a,b)=>b.points - a.points);
+      else if(mode==='wins') data.sort((a,b)=>b.wins - a.wins);
+      renderLeaderboard(data);
+    }
+    function resetLeaderboard(){ renderLeaderboard(leaderboardData); }
+
+    // Simulate update (demo)
+    function simulateUpdate(){
+      // increment random player's points
+      const idx = Math.floor(Math.random()*leaderboardData.length);
+      leaderboardData[idx].points += Math.floor(Math.random()*20)+1;
+      leaderboardData.sort(sortByPointsDesc);
+      renderLeaderboard(leaderboardData);
+    }
+  </script>
+
+</body>
