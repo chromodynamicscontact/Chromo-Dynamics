@@ -4,404 +4,1770 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Chromo Dynamics - La Scuderia Virtuale del Futuro</title>
-  <link href="https://fonts.googleapis.com/css2?family=Russo+One&family=Roboto:wght@300;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Exo+2:wght@300;400;600;700&display=swap" rel="stylesheet">
   <script src="https://cdn.tailwindcss.com"></script>
-  <link href="https://unpkg.com/aos@2.3.4/dist/aos.css" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
   <style>
+    :root {
+      --neon-blue: #00f0ff;
+      --neon-purple: #b000ff;
+      --dark-bg: #0a0a0a;
+      --card-bg: rgba(255,255,255,0.05);
+    }
+    
+    * { box-sizing: border-box; }
     html { scroll-behavior: smooth; }
-    body { background-color: #f0f9ff; color: #222; font-family: 'Roboto', sans-serif; }
-    .hero-bg { background: linear-gradient(135deg, #00ccff, #99ebff); }
-    .section-title { font-family: 'Russo One', sans-serif; letter-spacing: 1px; }
-    .nav-link { color: #1e90ff; text-decoration: none; font-weight: 600; margin-left: 1rem; }
-    .card { background: white; border-radius: 8px; padding: 1.25rem; box-shadow: 0 6px 18px rgba(20,40,80,0.06); }
-    .btn-primary { background: #ffffff; color: #1e90ff; padding: .75rem 1.25rem; border-radius: 999px; font-weight:700; }
-    .btn-ghost { background: #1e90ff; color: #fff; padding: .75rem 1.25rem; border-radius: 999px; font-weight:700; }
-    header nav { display:flex; align-items:center; justify-content:space-between; padding: 1rem 2rem; }
-    @media (max-width: 768px) { header nav { flex-direction:column; gap: 1rem; } .nav-right{display:none;} }
+    
+    body { 
+      background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 50%, #16213e 100%);
+      color: #ffffff; 
+      font-family: 'Exo 2', sans-serif; 
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    /* Animated background particles */
+    #particles-bg {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+      pointer-events: none;
+    }
+
+    /* Glowing animations */
+    @keyframes neonGlow {
+      0%, 100% { text-shadow: 0 0 5px var(--neon-blue), 0 0 10px var(--neon-blue), 0 0 15px var(--neon-blue); }
+      50% { text-shadow: 0 0 10px var(--neon-blue), 0 0 20px var(--neon-blue), 0 0 30px var(--neon-blue); }
+    }
+
+    @keyframes pulseGlow {
+      0%, 100% { box-shadow: 0 0 20px rgba(0,240,255,0.3); }
+      50% { box-shadow: 0 0 40px rgba(0,240,255,0.8), 0 0 60px rgba(176,0,255,0.4); }
+    }
+
+    @keyframes slideInLeft {
+      from { transform: translateX(-100px); opacity: 0; }
+      to { transform: translateX(0); opacity: 1; }
+    }
+
+    @keyframes slideInRight {
+      from { transform: translateX(100px); opacity: 0; }
+      to { transform: translateX(0); opacity: 1; }
+    }
+
+    @keyframes fadeInUp {
+      from { transform: translateY(50px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+
+    @keyframes rotateIn {
+      from { transform: rotate(-180deg) scale(0); opacity: 0; }
+      to { transform: rotate(0deg) scale(1); opacity: 1; }
+    }
+
+    .neon-text { 
+      font-family: 'Orbitron', monospace; 
+      animation: neonGlow 2s infinite alternate;
+      background: linear-gradient(45deg, var(--neon-blue), var(--neon-purple));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .glass-card {
+      background: rgba(255,255,255,0.1);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255,255,255,0.2);
+      border-radius: 20px;
+      padding: 2rem;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .glass-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+      transition: left 0.8s ease;
+    }
+
+    .glass-card:hover::before {
+      left: 100%;
+    }
+
+    .glass-card:hover {
+      transform: translateY(-10px) scale(1.02);
+      animation: pulseGlow 1s infinite alternate;
+    }
+
+    .btn-neon {
+      background: linear-gradient(45deg, var(--neon-blue), var(--neon-purple));
+      color: white;
+      padding: 12px 30px;
+      border-radius: 50px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      border: none;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+      transition: all 0.3s ease;
+      font-family: 'Orbitron', monospace;
+    }
+
+    .btn-neon::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+      transition: left 0.6s ease;
+    }
+
+    .btn-neon:hover::before {
+      left: 100%;
+    }
+
+    .btn-neon:hover {
+      transform: scale(1.05);
+      box-shadow: 0 10px 30px rgba(0,240,255,0.5);
+    }
+
+    .navbar {
+      background: rgba(0,0,0,0.9);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid rgba(0,240,255,0.3);
+      position: fixed;
+      width: 100%;
+      z-index: 1000;
+      top: 0;
+      transition: all 0.3s ease;
+    }
+
+    .navbar.scrolled {
+      background: rgba(0,0,0,0.95);
+      border-bottom-color: var(--neon-blue);
+    }
+
+    .nav-link {
+      color: #ffffff;
+      text-decoration: none;
+      font-weight: 600;
+      margin: 0 1rem;
+      position: relative;
+      transition: all 0.3s ease;
+    }
+
+    .nav-link::after {
+      content: '';
+      position: absolute;
+      bottom: -5px;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background: var(--neon-blue);
+      transition: width 0.3s ease;
+    }
+
+    .nav-link:hover::after {
+      width: 100%;
+    }
+
+    .hero-section {
+      height: 100vh;
+      background: linear-gradient(135deg, rgba(0,10,30,0.9), rgba(26,26,46,0.8)), url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000"><defs><pattern id="grid" width="50" height="50" patternUnits="userSpaceOnUse"><path d="M 50 0 L 0 0 0 50" fill="none" stroke="rgba(0,240,255,0.1)" stroke-width="1"/></pattern></defs><rect width="100%" height="100%" fill="url(%23grid)"/></svg>');
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .floating-elements {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+    }
+
+    .floating-car {
+      position: absolute;
+      width: 80px;
+      height: 40px;
+      background: linear-gradient(45deg, var(--neon-blue), var(--neon-purple));
+      border-radius: 10px;
+      animation: float 6s infinite ease-in-out;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0) rotate(0deg); }
+      33% { transform: translateY(-20px) rotate(5deg); }
+      66% { transform: translateY(-10px) rotate(-3deg); }
+    }
+
+    .racing-line {
+      position: absolute;
+      width: 200px;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, var(--neon-blue), transparent);
+      animation: racingLine 3s infinite linear;
+    }
+
+    @keyframes racingLine {
+      from { transform: translateX(-200px); }
+      to { transform: translateX(calc(100vw + 200px)); }
+    }
+
+    .stats-counter {
+      font-family: 'Orbitron', monospace;
+      font-size: 2.5rem;
+      font-weight: 900;
+      color: var(--neon-blue);
+      text-shadow: 0 0 10px var(--neon-blue);
+    }
+
+    .leaderboard-table {
+      width: 100%;
+      border-collapse: collapse;
+      background: rgba(0,0,0,0.5);
+      border-radius: 15px;
+      overflow: hidden;
+    }
+
+    .leaderboard-table th, .leaderboard-table td {
+      padding: 15px;
+      text-align: left;
+      border-bottom: 1px solid rgba(0,240,255,0.2);
+    }
+
+    .leaderboard-table th {
+      background: linear-gradient(45deg, var(--neon-blue), var(--neon-purple));
+      color: white;
+      font-family: 'Orbitron', monospace;
+      text-transform: uppercase;
+    }
+
+    .leaderboard-table tr:hover {
+      background: rgba(0,240,255,0.1);
+      transform: scale(1.02);
+      transition: all 0.3s ease;
+    }
+
+    .typing-text {
+      border-right: 2px solid var(--neon-blue);
+      animation: typing 3s steps(40) infinite, blink 1s infinite;
+    }
+
+    @keyframes typing {
+      0%, 50% { width: 0; }
+      100% { width: 100%; }
+    }
+
+    @keyframes blink {
+      0%, 50% { border-color: var(--neon-blue); }
+      51%, 100% { border-color: transparent; }
+    }
+
+    .timeline-item {
+      position: relative;
+      padding-left: 50px;
+      margin: 30px 0;
+    }
+
+    .timeline-item::before {
+      content: '';
+      position: absolute;
+      left: 20px;
+      top: 0;
+      width: 2px;
+      height: 100%;
+      background: linear-gradient(180deg, var(--neon-blue), var(--neon-purple));
+    }
+
+    .timeline-item::after {
+      content: '';
+      position: absolute;
+      left: 15px;
+      top: 5px;
+      width: 12px;
+      height: 12px;
+      background: var(--neon-blue);
+      border-radius: 50%;
+      box-shadow: 0 0 10px var(--neon-blue);
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      .hero-section h1 { font-size: 2.5rem; }
+      .glass-card { padding: 1.5rem; }
+      .nav-link { margin: 0 0.5rem; }
+      .stats-counter { font-size: 2rem; }
+    }
+
+    /* Loading Screen */
+    .loading-screen {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, #0a0a0a, #1a1a2e);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+      transition: opacity 1s ease;
+    }
+
+    .loading-screen.hide {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .loader {
+      width: 80px;
+      height: 80px;
+      border: 4px solid rgba(0,240,255,0.2);
+      border-top: 4px solid var(--neon-blue);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    /* Scroll Progress Bar */
+    .scroll-progress {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 0%;
+      height: 3px;
+      background: linear-gradient(90deg, var(--neon-blue), var(--neon-purple));
+      z-index: 1001;
+      transition: width 0.1s ease;
+    }
+
+    /* Interactive elements */
+    .interactive-zone {
+      position: relative;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .interactive-zone:hover {
+      transform: perspective(1000px) rotateX(10deg) rotateY(10deg);
+    }
   </style>
 </head>
 
-<body class="antialiased" data-aos-easing="ease-in-out" data-aos-duration="800">
-  <!-- Header / Navbar (preservato dal file originale) -->
-  <header class="bg-white sticky top-0 z-50 shadow-sm">
-    <nav class="container mx-auto flex items-center justify-between">
-      <div style="display:flex;align-items:center;gap:.75rem;">
-        <svg width="28" height="28" viewBox="0 0 24 24" fill="none"><path d="M3 12h18" stroke="#1e90ff" stroke-width="2" stroke-linecap="round"/></svg>
-        <span style="font-weight:700;color:#1e90ff;font-family:'Russo One',sans-serif;font-size:1.15rem;">Chromo Dynamics</span>
-      </div>
-      <div class="nav-right">
-        <a class="nav-link" href="#home">Home</a>
-        <a class="nav-link" href="#ecosistema">Ecosistema</a>
-        <a class="nav-link" href="#presentazione">Presentazione</a>
-        <a class="nav-link" href="#eventi">Eventi</a>
-        <a class="nav-link" href="#team">Team</a>
-        <a class="nav-link" href="#manifesto">Manifesto</a>
-        <a class="nav-link" href="#contatti">Contatti</a>
-      </div>
-    </nav>
-  </header>
-
-  <!-- Hero (preservato) -->
-  <section id="home" class="hero-bg text-white py-24 text-center" data-aos="fade-down">
-    <h1 class="text-5xl font-bold section-title mb-4">La Scuderia del Futuro</h1>
-    <p class="text-lg max-w-3xl mx-auto">Competizione virtuale. Passione reale. Benvenuto in Chromo Dynamics — dove tecnologia, stile e comunità si incontrano per reinventare il motorsport per chi non se lo puo permettere.</p>
-    <div class="mt-8 flex justify-center gap-4">
-      <a href="#eventi" class="btn-primary">Scopri gli Eventi</a>
-      <a href="#presentazione" class="btn-ghost">La Nostra Visione</a>
-    </div>
-  </section>
-
-  <!-- Ecosistema (preservato) -->
-  <section id="ecosistema" class="py-16 container mx-auto px-6" data-aos="fade-up">
-  <h2 class="text-3xl text-blue-600 font-bold section-title mb-6">Il Nostro Ecosistema</h2>
-  <div class="grid md:grid-cols-4 gap-6">
-    <div class="card text-center" data-aos="zoom-in">
-      <svg xmlns="http://www.w3.org/2000/svg" class="mx-auto" width="28" height="28" fill="none" stroke="#1e90ff" stroke-width="2" viewBox="0 0 24 24">
-        <path d="M12 6v6h4M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0z"/>
-      </svg>
-      <h3 class="font-bold mt-4">Obiettivi</h3>
-      <p class="text-gray-600 mt-2">Competere al massimo livello in ogni categoria virtuale, con risultati misurabili e crescita continua.</p>
-    </div>
-    <div class="card text-center" data-aos="zoom-in" data-aos-delay="100">
-      <svg xmlns="http://www.w3.org/2000/svg" class="mx-auto" width="28" height="28" fill="none" stroke="#1e90ff" stroke-width="2" viewBox="0 0 24 24">
-        <path d="M17 21v-2a4 4 0 0 0-3-3.87M7 21v-2a4 4 0 0 1 3-3.87m4-6a4 4 0 1 1-8 0 4 4 0 0 1 8 0z"/>
-        <path d="M21 21v-2a4 4 0 0 0-3-3.87M21 10a4 4 0 1 1-8 0 4 4 0 0 1 8 0z"/>
-      </svg>
-      <h3 class="font-bold mt-4">Community</h3>
-      <p class="text-gray-600 mt-2">Costruire relazioni durature: eventi, forum, live e attività che uniscono giocatori e appassionati.</p>
-    </div>
-    <div class="card text-center" data-aos="zoom-in" data-aos-delay="200">
-      <svg xmlns="http://www.w3.org/2000/svg" class="mx-auto" width="28" height="28" fill="none" stroke="#1e90ff" stroke-width="2" viewBox="0 0 24 24">
-        <path d="M8 21h8M12 17a5 5 0 0 1-5-5V5h10v7a5 5 0 0 1-5 5z"/>
-      </svg>
-      <h3 class="font-bold mt-4">Eventi</h3>
-      <p class="text-gray-600 mt-2">Organizzare gare creative e spettacolari, con regole chiare e premi per il merito.</p>
-    </div>
-    <div class="card text-center" data-aos="zoom-in" data-aos-delay="300">
-      <svg xmlns="http://www.w3.org/2000/svg" class="mx-auto" width="28" height="28" fill="none" stroke="#1e90ff" stroke-width="2" viewBox="0 0 24 24">
-        <path d="M12 3v2m6.364 1.636-1.414 1.414M21 12h-2M17.364 17.364l-1.414-1.414M12 19v2M6.636 17.364l1.414-1.414M3 12h2M6.636 6.636l1.414 1.414"/>
-      </svg>
-      <h3 class="font-bold mt-4">Innovazione</h3>
-      <p class="text-gray-600 mt-2">Sperimentare nuove formule: gamification, integrazioni AR/VR e partnership tecnologiche.</p>
-    </div>
+<body>
+  <!-- Loading Screen -->
+  <div class="loading-screen" id="loadingScreen">
+    <div class="loader"></div>
   </div>
-</section>
 
-  <!-- Presentazione (preservato) -->
-  <section id="presentazione" class="py-16 bg-blue-50 px-6" data-aos="fade-up">
+  <!-- Scroll Progress Bar -->
+  <div class="scroll-progress" id="scrollProgress"></div>
+
+  <!-- Animated Background -->
+  <canvas id="particles-bg"></canvas>
+
+  <!-- Navbar -->
+  <nav class="navbar" id="navbar">
+    <div class="container mx-auto px-6 py-4 flex items-center justify-between">
+      <div class="flex items-center space-x-3">
+        <div class="w-10 h-10 bg-gradient-to-r from-cyan-400 to-purple-500 rounded-full flex items-center justify-center">
+          <span class="text-white font-bold">CD</span>
+        </div>
+        <span class="neon-text text-xl font-bold">CHROMO DYNAMICS</span>
+      </div>
+      
+      <div class="hidden md:flex space-x-6">
+        <a href="#home" class="nav-link">Home</a>
+        <a href="#ecosistema" class="nav-link">Ecosistema</a>
+        <a href="#eventi" class="nav-link">Eventi</a>
+        <a href="#stats" class="nav-link">Stats</a>
+        <a href="#team" class="nav-link">Team</a>
+        <a href="#contatti" class="nav-link">Contatti</a>
+      </div>
+
+      <button class="md:hidden text-white" onclick="toggleMobileMenu()">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+        </svg>
+      </button>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <section id="home" class="hero-section">
+    <div class="floating-elements">
+      <div class="floating-car" style="top: 20%; left: 10%; animation-delay: 0s;"></div>
+      <div class="floating-car" style="top: 60%; left: 70%; animation-delay: 2s;"></div>
+      <div class="floating-car" style="top: 30%; right: 5%; animation-delay: 4s;"></div>
+      <div class="racing-line" style="top: 25%; animation-delay: 1s;"></div>
+      <div class="racing-line" style="top: 75%; animation-delay: 3s;"></div>
+    </div>
+    
+    <div class="z-10 max-w-4xl mx-auto px-6">
+      <h1 class="text-6xl md:text-8xl font-black neon-text mb-6 animate-pulse">
+        CHROMO DYNAMICS
+      </h1>
+      <p class="text-xl md:text-2xl mb-8 typing-text overflow-hidden whitespace-nowrap">
+        La Scuderia Virtuale del Futuro
+      </p>
+      <p class="text-lg md:text-xl text-gray-300 mb-12 max-w-2xl mx-auto">
+        Dove la tecnologia incontra la passione. Competizione virtuale, emozioni reali. 
+        Entra nel futuro del motorsport digitale.
+      </p>
+      
+      <div class="flex flex-wrap gap-6 justify-center">
+        <button class="btn-neon" onclick="scrollToSection('eventi')">
+          🏁 EVENTI LIVE
+        </button>
+        <button class="btn-neon" onclick="scrollToSection('stats')">
+          📊 STATISTICHE
+        </button>
+        <button class="btn-neon" onclick="window.open('https://www.roblox.com/it/games/126905260413036/Motorsport-Legends-Chromo-Dynamics-Beta-Test', '_blank')">
+  🎮 GIOCA ORA
+</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Live Stats Dashboard -->
+  <section id="stats" class="py-20 px-6">
     <div class="container mx-auto">
-      <h2 class="text-3xl text-blue-600 font-bold section-title mb-6">Presentazione Ufficiale</h2>
-      <div class="card">
-        <p class="text-lg leading-relaxed"><svg xmlns="http://www.w3.org/2000/svg" class="inline" width="20" height="20" fill="none" stroke="#1e90ff" stroke-width="2" viewBox="0 0 24 24"><path d="M12 2C10 5 7 6 7 10a5 5 0 0 0 10 0c0-4-3-5-5-8z"/><path d="M12 22a5 5 0 0 1-5-5 5 5 0 0 1 10 0 5 5 0 0 1-5 5z"/></svg> <strong>Nome del Team:</strong> Chromo Dynamics</p>
-        <p class="text-lg leading-relaxed"><svg xmlns="http://www.w3.org/2000/svg" class="inline" width="20" height="20" fill="none" stroke="#1e90ff" stroke-width="2" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3"/><path d="M22 4 12 14.01l-3-3"/></svg> <strong>Fondazione:</strong> 2025</p>
-        <p class="text-lg leading-relaxed"><svg xmlns="http://www.w3.org/2000/svg" class="inline" width="20" height="20" fill="none" stroke="#1e90ff" stroke-width="2" viewBox="0 0 24 24"><path d="M8 21h8M12 17a5 5 0 0 1-5-5V5h10v7a5 5 0 0 1-5 5z"/><path d="M5 5V3h14v2"/></svg> <strong>Identità:</strong> Scuderia virtuale multi-categoria con focus su creatività, competizione e comunità.</p>
-        <p class="mt-4 text-gray-700">La missione è creare un ecosistema che vada oltre la gara: vogliamo promuovere talenti, valorizzare la creatività nelle livree e offrire eventi che combinino spettacolo e competizione.</p>
+      <h2 class="text-5xl font-bold text-center neon-text mb-16">DASHBOARD LIVE</h2>
+      
+      <div class="grid md:grid-cols-4 gap-8 mb-16">
+        <div class="glass-card text-center interactive-zone">
+          <div class="stats-counter" id="membersCount">0</div>
+          <p class="text-gray-300 mt-2">Membri Attivi</p>
+        </div>
+        <div class="glass-card text-center interactive-zone">
+          <div class="stats-counter" id="racesCount">0</div>
+          <p class="text-gray-300 mt-2">Gare Completate</p>
+        </div>
+        <div class="glass-card text-center interactive-zone">
+          <div class="stats-counter" id="hoursCount">0</div>
+          <p class="text-gray-300 mt-2">Ore di Gioco</p>
+        </div>
+        <div class="glass-card text-center interactive-zone">
+          <div class="stats-counter" id="prizesCount">0</div>
+          <p class="text-gray-300 mt-2">Premi Assegnati</p>
+        </div>
+      </div>
+
+      <!-- Real-time Leaderboard -->
+      <div class="glass-card">
+        <div class="flex justify-between items-center mb-6">
+          <h3 class="text-2xl font-bold neon-text">🏆 CLASSIFICA LIVE</h3>
+          <button class="btn-neon" onclick="refreshLeaderboard()">
+            ⟳ AGGIORNA
+          </button>
+        </div>
+        
+        <table class="leaderboard-table" id="leaderboardTable">
+          <thead>
+            <tr>
+              <th>POS</th>
+              <th>PILOTA</th>
+              <th>PUNTI</th>
+              <th>VITTORIE</th>
+              <th>STATUS</th>
+            </tr>
+          </thead>
+          <tbody id="leaderboardBody">
+            <!-- Populated by JavaScript -->
+          </tbody>
+        </table>
       </div>
     </div>
   </section>
 
-  <!-- Video/Trailer aggiunto -->
-  <section id="video" class="py-16 container mx-auto px-6" data-aos="fade-up">
-    <h2 class="text-3xl text-blue-600 font-bold section-title mb-6">Trailer Ufficiale</h2>
-    <div class="card">
-      <p class="text-gray-700">Guarda il trailer ufficiale della scuderia. Se vuoi sostituire il video con uno specifico, mandami l'URL e lo metto.</p>
-      <div class="video-wrap" style="margin-top:.75rem">
-        <iframe id="trailer" src="https://www.youtube.com/embed/M7lc1UVf-VE" title="Chromo Dynamics Trailer" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+  <!-- Interactive Ecosistema -->
+  <section id="ecosistema" class="py-20 px-6 bg-gradient-to-b from-transparent to-gray-900/50">
+    <div class="container mx-auto">
+      <h2 class="text-5xl font-bold text-center neon-text mb-16">ECOSISTEMA DIGITALE</h2>
+      
+      <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+        <div class="glass-card text-center interactive-zone" onclick="showEcosystemDetail('competition')">
+          <div class="text-4xl mb-4">🏁</div>
+          <h3 class="text-xl font-bold mb-3">COMPETIZIONE</h3>
+          <p class="text-gray-300">Gare professionali con classifiche mondiali e premi reali</p>
+        </div>
+        
+        <div class="glass-card text-center interactive-zone" onclick="showEcosystemDetail('community')">
+          <div class="text-4xl mb-4">👥</div>
+          <h3 class="text-xl font-bold mb-3">COMMUNITY</h3>
+          <p class="text-gray-300">Network globale di piloti, fan e professionisti</p>
+        </div>
+        
+        <div class="glass-card text-center interactive-zone" onclick="showEcosystemDetail('tech')">
+          <div class="text-4xl mb-4">⚡</div>
+          <h3 class="text-xl font-bold mb-3">TECNOLOGIA</h3>
+          <p class="text-gray-300">AI, VR/AR e simulazioni next-gen</p>
+        </div>
+        
+        <div class="glass-card text-center interactive-zone" onclick="showEcosystemDetail('events')">
+          <div class="text-4xl mb-4">🎪</div>
+          <h3 class="text-xl font-bold mb-3">EVENTI</h3>
+          <p class="text-gray-300">Spettacoli live, tornei e celebrazioni</p>
+        </div>
+      </div>
+
+      <!-- Dynamic Detail Section -->
+      <div id="ecosystemDetail" class="mt-16 glass-card hidden">
+        <div id="detailContent"></div>
       </div>
     </div>
   </section>
 
-  <!-- Eventi (preservato) -->
-  <section id="eventi" <section id="eventi" class="py-16 container mx-auto px-6" data-aos="fade-up">
-  <h2 class="text-3xl text-blue-600 font-bold section-title mb-6">Eventi & Gare</h2>
-  <div class="grid md:grid-cols-2 gap-6">
-  
-    <!-- Evento 1 -->
-    <div class="card" data-aos="fade-right">
-      <h3 class="text-xl font-bold">Nuova Mappa di Monaco Roblox su Motorsport Legends!</h3>
-      <p class="text-gray-700 mb-4">Scopri la nuova mappa di Monaco su Roblox in Motorsport Legends! Preparati a gare mozzafiato in un ambiente completamente rinnovato.</p>
-      <div class="flex flex-wrap gap-4">
-        <a href="https://www.roblox.com/it/games/126905260413036/Motorsport-Legends-Chromo-Dynamics-Beta-Test" target="_blank"
-           class="btn btn-primary transform transition duration-300 hover:scale-110 flex items-center gap-2">
-          Gioca ora
-          <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 inline-block" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14M12 5l7 7-7 7"/>
-          </svg>
-        </a>
-        <button class="btn btn-secondary"
-                onclick="alert('In questo evento chiunque farà il tempo migliore in Monaco vincerà dei premi. Ognuno dovrà mandare uno screenshot o un video nella Gmail: ChromoDynamicsContact@gmail.com. Entro un tempo limitato verranno scelti i vincitori.')">
-          Regolamento
+  <!-- Eventi in corso -->
+  <section id="eventi" class="py-20 px-6">
+    <div class="container mx-auto">
+      <h2 class="text-5xl font-bold text-center neon-text mb-16">⚡ EVENTI LIVE</h2>
+      
+      <!-- Live Event Banner -->
+      <div class="glass-card mb-12 bg-gradient-to-r from-red-500/20 to-yellow-500/20 border-red-400/50">
+        <div class="flex items-center justify-between">
+          <div>
+            <div class="flex items-center mb-2">
+              <div class="w-3 h-3 bg-red-500 rounded-full animate-pulse mr-3"></div>
+              <span class="text-red-400 font-bold">🔴 LIVE NOW</span>
+            </div>
+            <h3 class="text-2xl font-bold mb-2">Grand Prix Monaco - Finale</h3>
+            <p class="text-gray-300">In corso: 24 piloti, gara a eliminazione</p>
+          </div>
+          <div class="text-right">
+            <div class="text-3xl font-bold text-red-400" id="liveViewers">1,247</div>
+            <p class="text-sm text-gray-400">spettatori</p>
+          </div>
+        </div>
+        <div class="mt-4 flex gap-4">
+          <button class="btn-neon" onclick="window.open('https://www.roblox.com/it/games/126905260413036/Motorsport-Legends-Chromo-Dynamics-Beta-Test', '_blank')">
+  🏁 PARTECIPA
+</button>
+          <button class="btn-neon bg-red-600" onclick="watchLive()">📺 GUARDA LIVE</button>
+        </div>
+      </div>
+
+      <div class="grid md:grid-cols-2 gap-8">
+        <!-- Evento 1 -->
+        <div class="glass-card interactive-zone">
+          <div class="flex items-center justify-between mb-4">
+            <h3 class="text-xl font-bold">🏎️ Monaco Time Attack</h3>
+            <span class="px-3 py-1 bg-green-500/20 text-green-400 rounded-full text-sm">ATTIVO</span>
+          </div>
+          <p class="text-gray-300 mb-4">Sfida il giro perfetto sul circuito più iconico del mondo. Premi per i primi 10 classificati.</p>
+          
+          <div class="bg-black/30 p-4 rounded-lg mb-4">
+            <div class="flex justify-between text-sm mb-2">
+              <span>Miglior tempo:</span>
+              <span class="text-yellow-400">1:12.347</span>
+            </div>
+            <div class="flex justify-between text-sm">
+              <span>Partecipanti:</span>
+              <span class="text-blue-400" id="participants1">156</span>
+            </div>
+          </div>
+
+          <div class="flex gap-3">
+            <button class="btn-neon flex-1" onclick="window.open('https://www.roblox.com/it/games/126905260413036/Motorsport-Legends-Chromo-Dynamics-Beta-Test', '_blank')">
+  🚀 GAREGGIA
+</button>
+            <button class="btn-neon" onclick="showRules('monaco')">📋 REGOLE</button>
+          </div>
+        </div>
+
+        <!-- Evento 2 -->
+        <div class="glass-card interactive-zone">
+          <div class="flex items-center justify-between mb-4">
+            <h3 class="text-xl font-bold">🏆 Championship Series</h3>
+            <span class="px-3 py-1 bg-yellow-500/20 text-yellow-400 rounded-full text-sm">PROSSIMO</span>
+          </div>
+          <p class="text-gray-300 mb-4">Campionato stagionale con 12 round. Registrazioni aperte fino al 25 agosto.</p>
+          
+          <div class="bg-black/30 p-4 rounded-lg mb-4">
+            <div class="flex justify-between text-sm mb-2">
+              <span>Inizio:</span>
+              <span class="text-green-400">30 Agosto 2025</span>
+            </div>
+            <div class="flex justify-between text-sm">
+              <span>Iscritti:</span>
+              <span class="text-blue-400" id="registered">89/120</span>
+            </div>
+          </div>
+
+          <div class="flex gap-3">
+            <button class="btn-neon flex-1" onclick="register()">✍️ REGISTRATI</button>
+            <button class="btn-neon" onclick="showSchedule()">📅 CALENDARIO</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Team Section Avanzata -->
+  <section id="team" class="py-20 px-6 bg-gradient-to-b from-gray-900/50 to-transparent">
+    <div class="container mx-auto">
+      <h2 class="text-5xl font-bold text-center neon-text mb-16">🏁 TEAM ELITE</h2>
+      
+      <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+        <div class="glass-card text-center interactive-zone" onclick="showMemberProfile('shon')">
+          <div class="w-24 h-24 bg-gradient-to-r from-cyan-400 to-blue-500 rounded-full mx-auto mb-4 flex items-center justify-center text-2xl font-bold">
+            SM
+          </div>
+          <h3 class="text-xl font-bold mb-2">Shon Mollah</h3>
+          <p class="text-cyan-400 mb-2">🏆 Founder & CEO</p>
+          <p class="text-gray-400 text-sm">Visionario del progetto, strategia e leadership</p>
+          <div class="mt-4 flex justify-center space-x-2">
+            <span class="px-2 py-1 bg-blue-500/20 text-blue-400 rounded text-xs">Leadership</span>
+            <span class="px-2 py-1 bg-purple-500/20 text-purple-400 rounded text-xs">Strategy</span>
+          </div>
+        </div>
+
+        <div class="glass-card text-center interactive-zone" onclick="showMemberProfile('mattia')">
+          <div class="w-24 h-24 bg-gradient-to-r from-purple-400 to-pink-500 rounded-full mx-auto mb-4 flex items-center justify-center text-2xl font-bold">
+            MM
+          </div>
+          <h3 class="text-xl font-bold mb-2">Mattia Mameli</h3>
+          <p class="text-purple-400 mb-2">🎨 Creative Director</p>
+          <p class="text-gray-400 text-sm">Design, visual storytelling e branding</p>
+          <div class="mt-4 flex justify-center space-x-2">
+            <span class="px-2 py-1 bg-pink-500/20 text-pink-400 rounded text-xs">Design</span>
+            <span class="px-2 py-1 bg-orange-500/20 text-orange-400 rounded text-xs">Creative</span>
+          </div>
+        </div>
+
+        <div class="glass-card text-center interactive-zone" onclick="showMemberProfile('koyshika')">
+          <div class="w-24 h-24 bg-gradient-to-r from-green-400 to-teal-500 rounded-full mx-auto mb-4 flex items-center justify-center text-2xl font-bold">
+            KM
+          </div>
+          <h3 class="text-xl font-bold mb-2">Koyshika Mollah</h3>
+          <p class="text-green-400 mb-2">🎭 Art Director</p>
+          <p class="text-gray-400 text-sm">Concept art, livree e direzione artistica</p>
+          <div class="mt-4 flex justify-center space-x-2">
+            <span class="px-2 py-1 bg-green-500/20 text-green-400 rounded text-xs">Art</span>
+            <span class="px-2 py-1 bg-teal-500/20 text-teal-400 rounded text-xs">Concept</span>
+          </div>
+        </div>
+
+        <div class="glass-card text-center interactive-zone" onclick="showMemberProfile('recruiting')">
+          <div class="w-24 h-24 bg-gradient-to-r from-gray-400 to-gray-600 rounded-full mx-auto mb-4 flex items-center justify-center text-2xl">
+            <span class="animate-pulse">?</span>
+          </div>
+          <h3 class="text-xl font-bold mb-2">Unisciti al Team</h3>
+          <p class="text-gray-400 mb-2">🚀 Recruiting Open</p>
+          <p class="text-gray-400 text-sm">Cerchiamo talenti in sviluppo, marketing e community</p>
+          <div class="mt-4">
+            <button class="btn-neon text-sm" onclick="openRecruiting()">CANDIDATI</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Team Stats -->
+      <div class="mt-16 grid md:grid-cols-3 gap-8">
+        <div class="glass-card text-center">
+          <div class="text-3xl font-bold text-yellow-400" id="teamExperience">5</div>
+          <p class="text-gray-300">Anni di Esperienza Combinata</p>
+        </div>
+        <div class="glass-card text-center">
+          <div class="text-3xl font-bold text-blue-400" id="projectsCompleted">47</div>
+          <p class="text-gray-300">Progetti Completati</p>
+        </div>
+        <div class="glass-card text-center">
+          <div class="text-3xl font-bold text-green-400" id="communitySize">2.8K</div>
+          <p class="text-gray-300">Community Members</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Timeline Storia -->
+  <section class="py-20 px-6">
+    <div class="container mx-auto">
+      <h2 class="text-5xl font-bold text-center neon-text mb-16">📈 ROADMAP & STORIA</h2>
+      
+      <div class="max-w-4xl mx-auto">
+        <div class="timeline-item glass-card">
+          <h3 class="text-xl font-bold text-green-400 mb-2">Q1 2025 - NASCITA ✅</h3>
+          <p class="text-gray-300">Fondazione di Chromo Dynamics, primi eventi test su Roblox, creazione del brand e della community iniziale.</p>
+        </div>
+
+        <div class="timeline-item glass-card">
+          <h3 class="text-xl font-bold text-yellow-400 mb-2">Q2 2025 - CRESCITA 🔄</h3>
+          <p class="text-gray-300">Lancio del championship series, partnership strategiche, sviluppo della piattaforma eventi e primi sponsor.</p>
+        </div>
+
+        <div class="timeline-item glass-card">
+          <h3 class="text-xl font-bold text-blue-400 mb-2">Q3 2025 - ESPANSIONE 🚀</h3>
+          <p class="text-gray-300">Integrazione multi-platform, eventi internazionali, merchandising ufficiale e accademia piloti virtuali.</p>
+        </div>
+
+        <div class="timeline-item glass-card">
+          <h3 class="text-xl font-bold text-purple-400 mb-2">Q4 2025 - INNOVAZIONE ⚡</h3>
+          <p class="text-gray-300">Tecnologie AR/VR, partnership con team reali, streaming platform proprietario e primi investimenti.</p>
+        </div>
+
+        <div class="timeline-item glass-card">
+          <h3 class="text-xl font-bold text-red-400 mb-2">2026+ - FUTURO 🌟</h3>
+          <p class="text-gray-300">Espansione globale, academy fisica, partnership Formula 1, piattaforma di racing proprietaria.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Roblox Integration Hub -->
+  <section id="roblox" class="py-20 px-6 bg-gradient-to-r from-purple-900/20 to-blue-900/20">
+    <div class="container mx-auto">
+      <h2 class="text-5xl font-bold text-center neon-text mb-16">🎮 ROBLOX HUB</h2>
+      
+      <div class="grid md:grid-cols-2 gap-12 items-center">
+        <div>
+          <h3 class="text-3xl font-bold mb-6">Entra nel Metaverso Racing</h3>
+          <p class="text-gray-300 text-lg mb-6">
+            La nostra piattaforma Roblox offre un'esperienza di racing completamente immersiva con:
+          </p>
+          
+          <div class="space-y-4 mb-8">
+            <div class="flex items-center space-x-3">
+              <div class="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center">✓</div>
+              <span>Circuiti ricreati in dettaglio fotorealistico</span>
+            </div>
+            <div class="flex items-center space-x-3">
+              <div class="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center">✓</div>
+              <span>Fisica avanzata e handling realistici</span>
+            </div>
+            <div class="flex items-center space-x-3">
+              <div class="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center">✓</div>
+              <span>Sistema di classifiche globali</span>
+            </div>
+            <div class="flex items-center space-x-3">
+              <div class="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center">✓</div>
+              <span>Livree personalizzabili e garage virtuale</span>
+            </div>
+          </div>
+
+          <div class="flex gap-4">
+            <button class="btn-neon" onclick="window.open('https://www.roblox.com/it/games/126905260413036/Motorsport-Legends-Chromo-Dynamics-Beta-Test', '_blank')">
+  🎮 GIOCA ORA
+            <button class="btn-neon" onclick="showTrailer()">🎬 TRAILER</button>
+          </div>
+        </div>
+
+        <div class="glass-card">
+          <h4 class="text-xl font-bold mb-4 text-center">🏆 REGISTRAZIONE EVENTI</h4>
+          <p class="text-gray-300 mb-6">Registrati per ricevere inviti esclusivi ai nostri eventi e gare speciali!</p>
+          
+          <form id="robloxRegistration" class="space-y-4">
+            <div>
+              <label class="block text-sm font-bold mb-2" for="robloxUsername">Username Roblox</label>
+              <input type="text" id="robloxUsername" class="w-full bg-black/50 border border-cyan-500/30 rounded-lg px-4 py-3 text-white focus:border-cyan-400 focus:outline-none" placeholder="Il tuo username Roblox" required>
+            </div>
+            
+            <div>
+              <label class="block text-sm font-bold mb-2" for="playerEmail">Email</label>
+              <input type="email" id="playerEmail" class="w-full bg-black/50 border border-cyan-500/30 rounded-lg px-4 py-3 text-white focus:border-cyan-400 focus:outline-none" placeholder="la-tua-email@example.com" required>
+            </div>
+            
+            <div>
+              <label class="block text-sm font-bold mb-2" for="skillLevel">Livello di Esperienza</label>
+              <select id="skillLevel" class="w-full bg-black/50 border border-cyan-500/30 rounded-lg px-4 py-3 text-white focus:border-cyan-400 focus:outline-none">
+                <option value="principiante">🟢 Principiante</option>
+                <option value="intermedio">🟡 Intermedio</option>
+                <option value="avanzato">🟠 Avanzato</option>
+                <option value="pro">🔴 Professionista</option>
+              </select>
+            </div>
+            
+            <div class="flex items-center space-x-2">
+              <input type="checkbox" id="notifications" class="text-cyan-400">
+              <label for="notifications" class="text-sm">Ricevi notifiche per eventi speciali</label>
+            </div>
+            
+            <button type="submit" class="btn-neon w-full">
+              ⚡ REGISTRATI AL HUB
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Partnership & Sponsor -->
+  <section class="py-20 px-6">
+    <div class="container mx-auto">
+      <h2 class="text-5xl font-bold text-center neon-text mb-16">🤝 PARTNERSHIP</h2>
+      
+      <div class="grid md:grid-cols-3 gap-8 mb-12">
+        <div class="glass-card text-center interactive-zone">
+          <div class="text-4xl mb-4">🏎️</div>
+          <h3 class="text-xl font-bold mb-3">Team Reali</h3>
+          <p class="text-gray-300">Collaborazioni con scuderie professionali per scambio di know-how e tecnologie</p>
+        </div>
+        
+        <div class="glass-card text-center interactive-zone">
+          <div class="text-4xl mb-4">💻</div>
+          <h3 class="text-xl font-bold mb-3">Tech Partners</h3>
+          <p class="text-gray-300">Hardware gaming, software di simulazione e piattaforme streaming</p>
+        </div>
+        
+        <div class="glass-card text-center interactive-zone">
+          <div class="text-4xl mb-4">🎯</div>
+          <h3 class="text-xl font-bold mb-3">Brand Sponsor</h3>
+          <p class="text-gray-300">Marchi automotive, gaming e lifestyle per visibilità e crescita</p>
+        </div>
+      </div>
+
+      <div class="glass-card text-center">
+        <h3 class="text-2xl font-bold neon-text mb-4">Diventa Partner</h3>
+        <p class="text-gray-300 mb-6">Unisciti al futuro del motorsport virtuale. Offriamo pacchetti di sponsorizzazione personalizzati.</p>
+        <button class="btn-neon" onclick="openPartnership()">
+          📊 PROPOSAL DECK
         </button>
       </div>
     </div>
-
-    <!-- Evento 2 -->
-    <div class="card" data-aos="fade-left">
-      <h3 class="text-xl font-bold">Gara di Tempo sul nuovo circuito di Monaco con la Ferrari 488 GT3</h3>
-      <p class="text-gray-700 mb-4">Sfida te stesso nel nuovo circuito di Monaco a bordo della Ferrari 488 GT3! Chi otterrà il tempo migliore vincerà premi esclusivi.</p>
-      <div class="flex flex-wrap gap-4">
-        <a href="https://www.roblox.com/it/games/126905260413036/Motorsport-Legends-Chromo-Dynamics-Beta-Test" target="_blank"
-           class="btn btn-primary transform transition duration-300 hover:scale-110 flex items-center gap-2">
-          Gioca ora
-          <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 inline-block" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14M12 5l7 7-7 7"/>
-          </svg>
-        </a>
-        <button class="btn btn-secondary"
-                onclick="alert('In questo evento chiunque farà il tempo migliore in Monaco vincerà dei premi. Ognuno dovrà mandare uno screenshot o un video nella Gmail: ChromoDynamicsContact@gmail.com. Entro un tempo limitato verranno scelti i vincitori.')">
-          Regolamento
-        </button>
-      </div>
-    </div>
-
-  </div>
-</section>
-
-
-  <!-- Leaderboard dinamica aggiunta -->
-  <section id="leaderboard" class="py-16 container mx-auto px-6" data-aos="fade-up">
-    <h2 class="text-3xl text-blue-600 font-bold section-title mb-6">Leaderboard - Classifica</h2>
-    <div class="card leaderboard">
-      <p class="text-gray-700">Classifica attuale dei piloti. I dati sono aggiornabili tramite il pannello JS sotto (vedi README nella cartella ZIP).</p>
-      <table id="board-table" style="width:100%;border-collapse:collapse;margin-top:.75rem">
-        <thead><tr style="text-align:left"><th>Pos</th><th>Pilota</th><th>Punti</th><th>Vittorie</th></tr></thead>
-        <tbody></tbody>
-      </table>
-      <div style="margin-top:.75rem;display:flex;gap:.5rem;flex-wrap:wrap;align-items:center">
-        <button class="btn btn-primary" onclick="sortLeaderboard('points')">Ordina per Punti</button>
-        <button class="btn btn-primary" onclick="sortLeaderboard('wins')">Ordina per Vittorie</button>
-        <button class="btn btn-primary" onclick="resetLeaderboard()">Reset</button>
-        <button class="btn btn-primary" onclick="simulateUpdate()">Simula Update</button>
-        <div style="margin-left:auto" class="muted">Aggiornamento live simulato</div>
-      </div>
-    </div>
   </section>
 
-  <!-- Storia, Visione, Collaborazioni, Community, Merchandising (preservati) -->
-  <section class="py-16 container mx-auto px-6" data-aos="fade-up">
-    <h2 class="text-3xl text-blue-600 font-bold section-title mb-6">La Nostra Storia</h2>
-    <div class="card">
-      <p class="text-lg leading-relaxed">Chromo Dynamics nasce da una community di amici appassionati di racing. Partiti da gare amatoriali su simulatori, abbiamo maturato l'ambizione di diventare una scuderia completa e riconosciuta. Ogni evento test è stato un passo verso la professionalizzazione, aiutandoci a definire regole, format e strumenti di gestione.</p>
-      <p class="mt-3 text-lg leading-relaxed">Le prime collaborazioni ci hanno permesso di investire in grafiche, broadcast e premi per i partecipanti. La storia è appena cominciata: il futuro è di chi osa costruirlo.</p>
-    </div>
-  </section>
-
-  <section class="bg-blue-50 py-16 px-6" data-aos="fade-up">
+  <!-- Advanced Contact Section -->
+  <section id="contatti" class="py-20 px-6 bg-gradient-to-b from-transparent to-gray-900/80">
     <div class="container mx-auto">
-      <h2 class="text-3xl text-blue-600 font-bold section-title mb-6">Visione 2025–2030</h2>
-      <ul class="list-disc list-inside text-lg">
-        <li>Accademia virtuale per piloti emergenti con corsi e mentorship.</li>
-        <li>Partecipazione a eventi internazionali e partnership con team reali.</li>
-        <li>Sviluppo di tecnologie e tool per analisi telemetria e ottimizzazione.</li>
-        <li>Linea ufficiale di merchandising per fan e piloti.</li>
-      </ul>
-    </div>
-  </section>
+      <h2 class="text-5xl font-bold text-center neon-text mb-16">📡 COMMAND CENTER</h2>
+      
+      <div class="grid md:grid-cols-2 gap-12">
+        <div class="glass-card">
+          <h3 class="text-2xl font-bold mb-6">🚀 CONTATTI DIRETTI</h3>
+          
+          <div class="space-y-6">
+            <div class="flex items-center space-x-4">
+              <div class="w-12 h-12 bg-gradient-to-r from-cyan-400 to-blue-500 rounded-full flex items-center justify-center">
+                ✉️
+              </div>
+              <div>
+                <p class="font-bold">Email Ufficiale</p>
+                <a href="mailto:ChromoDynamicsContact@gmail.com" class="text-cyan-400 hover:text-cyan-300">
+                  ChromoDynamicsContact@gmail.com
+                </a>
+              </div>
+            </div>
 
-  <section class="py-16 container mx-auto px-6" data-aos="fade-up">
-    <h2 class="text-3xl text-blue-600 font-bold section-title mb-6">Collaborazioni & Sponsor</h2>
-    <div class="card">
-      <p class="text-lg leading-relaxed">Siamo aperti a collaborazioni con brand che credono nell'innovazione: tecnologie hardware, software, aziende automotive e realtà creative. Offriamo visibilità, format personalizzati e attivazioni digitali per coinvolgere la community.</p>
-    </div>
-  </section>
+            <div class="flex items-center space-x-4">
+              <div class="w-12 h-12 bg-gradient-to-r from-green-400 to-teal-500 rounded-full flex items-center justify-center">
+                💬
+              </div>
+              <div>
+                <p class="font-bold">WhatsApp Community</p>
+                <a href="https://chat.whatsapp.com/JbOkIYeFqA3GvaMIey7PG2" target="_blank" class="text-green-400 hover:text-green-300">
+                  Unisciti alla Chat
+                </a>
+              </div>
+            </div>
 
-  <section class="bg-blue-50 py-16 px-6" data-aos="fade-up">
-    <div class="container mx-auto">
-      <h2 class="text-3xl text-blue-600 font-bold section-title mb-6">La Nostra Community</h2>
-      <div class="card">
-        <p class="text-lg leading-relaxed">La Chromo Crew è il cuore del progetto: giocatori, streamer, creativi e partner che lavorano insieme per amplificare eventi e progetti. Organizziamo weekly meet, AMA, e workshop creativi per coinvolgere i membri.</p>
-      </div>
-    </section>
+            <div class="flex items-center space-x-4">
+              <div class="w-12 h-12 bg-gradient-to-r from-red-400 to-pink-500 rounded-full flex items-center justify-center">
+                📺
+              </div>
+              <div>
+                <p class="font-bold">YouTube Channel</p>
+                <a href="https://www.youtube.com/@ChromoDynamicsOfficial" target="_blank" class="text-red-400 hover:text-red-300">
+                  @ChromoDynamicsOfficial
+                </a>
+              </div>
+            </div>
+          </div>
 
-  <section class="py-16 container mx-auto px-6" data-aos="fade-up">
-    <h2 class="text-3xl text-blue-600 font-bold section-title mb-6">Merchandising</h2>
-    <div class="card">
-      <p class="text-lg leading-relaxed">La linea Chromo Dynamics includerà capi sportivi, cappellini, adesivi e accessori digitali per avatar. Ogni prodotto rifletterà il nostro stile: audace, digitale e luminoso.</p>
-    </div>
-  </section>
+          <div class="mt-8 p-4 bg-gradient-to-r from-yellow-500/20 to-orange-500/20 rounded-lg border border-yellow-500/30">
+            <div class="flex items-center space-x-2 mb-2">
+              <span class="text-yellow-400">⚡</span>
+              <span class="font-bold text-yellow-400">RISPOSTA RAPIDA</span>
+            </div>
+            <p class="text-sm text-gray-300">Rispondiamo entro 24 ore a tutte le comunicazioni ufficiali</p>
+          </div>
+        </div>
 
-  <!-- Team (preservato) -->
-  <section id="team" class="py-16 container mx-auto px-6" data-aos="fade-up">
-    <h2 class="text-3xl text-blue-600 font-bold section-title mb-6">Il Nostro Team</h2>
-    <div class="grid md:grid-cols-3 gap-6">
-      <div class="card text-center">
-        <h3 class="font-bold text-xl">Shon Mollah</h3>
-        <p class="text-gray-600">Founder & CEO</p>
-        <p class="text-sm text-gray-500 mt-2">Visionario, guida strategica e rappresentante ufficiale del progetto.</p>
-      </div>
-      <div class="card text-center">
-        <h3 class="font-bold text-xl">More Soon</h3>
-        <p class="text-gray-600">Team Manager</p>
-        <p class="text-sm text-gray-500 mt-2">Responsabile operativo e coordinator eventi.</p>
-      </div>
-      <div class="card text-center">
-        <h3 class="font-bold text-xl">Mattia Mameli</h3>
-        <p class="text-gray-600">Creative Director</p>
-        <p class="text-sm text-gray-500 mt-2">Design, comunicazione visiva e storytelling.</p>
-      </div>
-      <div class="card text-center">
-        <h3 class="font-bold text-xl">Koyshika Mollah</h3>
-        <p class="text-gray-600">Creative Director</p>
-        <p class="text-sm text-gray-500 mt-2">Concept, livree e direzione artistica.</p>
-      </div>
-    </div>
-  </section>
-
-  <!-- Goals & Obiettivi (preservato) -->
-  <section class="py-16 container mx-auto px-6" data-aos="fade-up">
-    <h2 class="text-3xl text-blue-600 font-bold section-title mb-6">Goals (Obiettivi e Risultati)</h2>
-    <div class="card">
-      <ol class="list-decimal list-inside text-lg">
-        <li>Raggiungere 1.000 membri attivi nella community entro 12 mesi.</li>
-        <li>Organizzare almeno 6 eventi ufficiali nel primo anno.</li>
-        <li>Stringere almeno 3 partnership commerciali rilevanti.</li>
-        <li>Lanciare la prima linea di merchandising entro 18 mesi.</li>
-      </ol>
-    </div>
-  </section>
-
-  <!-- Contatti aggiornati -->
-  <section id="contatti" class="py-16 bg-blue-50 px-6" data-aos="fade-up">
-    <div class="container mx-auto">
-      <h2 class="text-3xl text-blue-600 font-bold section-title mb-6">Contattaci</h2>
-      <div class="card">
-        <p class="text-lg leading-relaxed">Per collaborazioni, sponsor o info: <strong>email: ChromoDynamicsContact@gmail.com</strong> — oppure contattaci su WhatsApp o YouTube tramite i link rapidi.</p>
-        <div style="margin-top:.75rem;display:flex;gap:.5rem;flex-wrap:wrap">
-          <a class="btn btn-primary" href="mailto:ChromoDynamicsContact@gmail.com">Invia Email</a>
-          <a class="btn btn-primary" href="https://chat.whatsapp.com/JbOkIYeFqA3GvaMIey7PG2" target="_blank" rel="noopener">Apri WhatsApp</a>
-          <a class="btn btn-primary" href="https://www.youtube.com/@ChromoDynamicsOfficial" target="_blank" rel="noopener">Canale YouTube</a>
+        <div class="glass-card">
+          <h3 class="text-2xl font-bold mb-6">📋 MESSAGGIO DIRETTO</h3>
+          
+          <form action="https://formspree.io/f/movlraqb" method="POST" class="space-y-4">
+            <div class="grid md:grid-cols-2 gap-4">
+              <div>
+                <label class="block text-sm font-bold mb-2 text-gray-300">Nome</label>
+                <input type="text" name="name" class="w-full bg-black/50 border border-cyan-500/30 rounded-lg px-4 py-3 text-white focus:border-cyan-400 focus:outline-none" required>
+              </div>
+              <div>
+                <label class="block text-sm font-bold mb-2 text-gray-300">Email</label>
+                <input type="email" name="email" class="w-full bg-black/50 border border-cyan-500/30 rounded-lg px-4 py-3 text-white focus:border-cyan-400 focus:outline-none" required>
+              </div>
+            </div>
+            
+            <div>
+              <label class="block text-sm font-bold mb-2 text-gray-300">Oggetto</label>
+              <select name="subject" class="w-full bg-black/50 border border-cyan-500/30 rounded-lg px-4 py-3 text-white focus:border-cyan-400 focus:outline-none">
+                <option value="🏁 Partecipazione Eventi">🏁 Partecipazione Eventi</option>
+                <option value="🤝 Partnership & Sponsor">🤝 Partnership & Sponsor</option>
+                <option value="🎮 Supporto Tecnico">🎮 Supporto Tecnico</option>
+                <option value="👥 Collaborazioni">👥 Collaborazioni</option>
+                <option value="📰 Media & Press">📰 Media & Press</option>
+                <option value="❓ Altro">❓ Altro</option>
+              </select>
+            </div>
+            
+            <div>
+              <label class="block text-sm font-bold mb-2 text-gray-300">Messaggio</label>
+              <textarea name="message" rows="5" class="w-full bg-black/50 border border-cyan-500/30 rounded-lg px-4 py-3 text-white focus:border-cyan-400 focus:outline-none" placeholder="Descrivi la tua richiesta in dettaglio..." required></textarea>
+            </div>
+            
+            <input type="hidden" name="_subject" value="Nuovo Messaggio dal Sito - Chromo Dynamics">
+            <input type="hidden" name="_replyto" value="chromodynamicscontact@gmail.com">
+            
+            <button type="submit" class="btn-neon w-full">
+              🚀 INVIA MESSAGGIO
+            </button>
+          </form>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- FAQ (preservato) -->
-  <section class="py-16 container mx-auto px-6" data-aos="fade-up">
-    <h2 class="text-3xl text-blue-600 font-bold section-title mb-6">FAQ</h2>
-    <div class="card">
-      <p><strong>Come posso partecipare alle gare?</strong> — Registrati alla nostra community e segui gli annunci nella sezione eventi.</p>
-      <p class="mt-3"><strong>Il team è reale?</strong> — Siamo una scuderia virtuale con obiettivi reali, e vogliamo crescere fino a diventare anche su pista reale.</p>
-    </div>
-  </section>
-
-  <!-- Footer (preservato) -->
-  <footer class="bg-white text-center text-gray-600 py-8 border-t">
+  <!-- Footer Futuristico -->
+  <footer class="bg-gradient-to-r from-gray-900 to-black py-12 px-6">
     <div class="container mx-auto">
-      <p class="mb-2">© 2025 Chromo Dynamics – Tutti i diritti riservati.</p>
-      <p class="text-sm text-gray-500">Questo sito è una demo progettuale. Alcuni riferimenti (email, link) sono esemplificativi.</p>
-    </div>
-  
-<section id="roblox" class="py-16 bg-blue-50 px-6" data-aos="fade-up">
-  <div class="container mx-auto">
-    <h2 class="text-3xl text-blue-600 font-bold section-title mb-6">Chromo Dynamics su Roblox</h2>
-    <div class="card">
-      <p class="text-lg leading-relaxed">
-        La nostra scuderia virtuale si espande nel mondo di Roblox, portando eventi esclusivi, gare mozzafiato e sfide competitive direttamente nella piattaforma di gioco più creativa al mondo.
-      </p>
-      <h3 class="mt-6 font-bold flex items-center">
-        <svg xmlns="http://www.w3.org/2000/svg" class="inline mr-2" width="20" height="20" fill="none" stroke="#1e90ff" stroke-width="2" viewBox="0 0 24 24">
-          <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
-        </svg> Perché ti chiediamo il tuo username Roblox?
-      </h3>
-      <ul class="list-disc pl-6 mt-2 text-gray-700">
-        <li>Per identificarti ufficialmente come membro o partecipante ai nostri eventi.</li>
-        <li>Per poterti aggiungere alle whitelist degli eventi privati.</li>
-        <li>Per garantire classifiche corrette e premi giusti a chi partecipa.</li>
-        <li>Per inviarti inviti esclusivi a gare e attività speciali.</li>
-      </ul>
-
-      <h3 class="mt-6 font-bold flex items-center">
-        <svg xmlns="http://www.w3.org/2000/svg" class="inline mr-2" width="20" height="20" fill="none" stroke="#1e90ff" stroke-width="2" viewBox="0 0 24 24">
-          <circle cx="12" cy="12" r="10"/><path d="M8 12h8M12 8v8"/>
-        </svg> Come funziona:
-      </h3>
-      <ol class="list-decimal pl-6 mt-2 text-gray-700">
-        <li>Compili il modulo con il tuo username Roblox e la tua email.</li>
-        <li>I tuoi dati vengono inviati direttamente al team Chromo Dynamics (alla nostra email ufficiale).</li>
-        <li>Ti invieremo conferma e, quando ci sarà un evento, riceverai orario, link e regolamento.</li>
-      </ol>
-
-      <h3 class="mt-6 font-bold flex items-center">
-        <svg xmlns="http://www.w3.org/2000/svg" class="inline mr-2" width="20" height="20" fill="none" stroke="#1e90ff" stroke-width="2" viewBox="0 0 24 24">
-          <path d="M9 19V6h13M9 6L4 10v8l5 4V6z"/>
-        </svg> Perché farlo?
-      </h3>
-      <ul class="list-disc pl-6 mt-2 text-gray-700">
-        <li>Accesso a eventi unici in Roblox organizzati da Chromo Dynamics.</li>
-        <li>Possibilità di vincere riconoscimenti, punti in classifica e premi speciali.</li>
-        <li>Essere parte di una community appassionata di motorsport virtuale e creatività.</li>
-      </ul>
-
-      <p class="mt-4 text-red-600 font-bold flex items-center">
-        <svg xmlns="http://www.w3.org/2000/svg" class="inline mr-2" width="20" height="20" fill="none" stroke="#ff0000" stroke-width="2" viewBox="0 0 24 24">
-          <path d="M12 9v2m0 4h.01M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0z"/>
-        </svg> I posti agli eventi sono limitati: registrati ora per non perdere il prossimo appuntamento in pista!
-      </p>
-
-      <!-- Modulo di registrazione Roblox -->
-      <form action="https://formspree.io/f/movlraqb" method="POST" class="mt-6 space-y-4">
+      <div class="grid md:grid-cols-4 gap-8 mb-8">
         <div>
-          <label for="roblox-username" class="block font-bold text-gray-700">Username Roblox</label>
-          <input type="text" id="roblox-username" name="roblox_username" required class="w-full border border-gray-300 rounded px-4 py-2" placeholder="Inserisci il tuo username Roblox">
+          <div class="flex items-center space-x-3 mb-4">
+            <div class="w-10 h-10 bg-gradient-to-r from-cyan-400 to-purple-500 rounded-full flex items-center justify-center">
+              <span class="text-white font-bold">CD</span>
+            </div>
+            <span class="neon-text text-xl font-bold">CHROMO DYNAMICS</span>
+          </div>
+          <p class="text-gray-400 text-sm">
+            Il futuro del motorsport virtuale è qui. Unisciti alla rivoluzione digitale.
+          </p>
         </div>
-        <div>
-          <label for="email" class="block font-bold text-gray-700">Email</label>
-          <input type="email" id="email" name="email" required class="w-full border border-gray-300 rounded px-4 py-2" placeholder="Inserisci la tua email">
-        </div>
-        <button type="submit" class="btn-ghost">Registrati</button>
-      </form>
-    </div>
-  </div>
-</section>
-</footer>
 
-  <!-- Script: AOS + Leaderboard dynamic JS + contact form via mailto -->
-  <script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
+        <div>
+          <h4 class="font-bold mb-3 text-cyan-400">QUICK LINKS</h4>
+          <ul class="space-y-2 text-sm">
+            <li><a href="#eventi" class="text-gray-400 hover:text-white">Eventi Live</a></li>
+            <li><a href="#stats" class="text-gray-400 hover:text-white">Classifiche</a></li>
+            <li><a href="#team" class="text-gray-400 hover:text-white">Team</a></li>
+            <li><a href="#roblox" class="text-gray-400 hover:text-white">Roblox Hub</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <h4 class="font-bold mb-3 text-cyan-400">COMMUNITY</h4>
+          <ul class="space-y-2 text-sm">
+            <li><a href="#" class="text-gray-400 hover:text-white">Discord Server</a></li>
+            <li><a href="#" class="text-gray-400 hover:text-white">Forum</a></li>
+            <li><a href="#" class="text-gray-400 hover:text-white">Academy</a></li>
+            <li><a href="#" class="text-gray-400 hover:text-white">Merchandise</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <h4 class="font-bold mb-3 text-cyan-400">STATUS</h4>
+          <div class="space-y-3">
+            <div class="flex items-center space-x-2">
+              <div class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+              <span class="text-sm text-gray-400">Platform Online</span>
+            </div>
+            <div class="flex items-center space-x-2">
+              <div class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+              <span class="text-sm text-gray-400">Eventi Attivi</span>
+            </div>
+            <div class="flex items-center space-x-2">
+              <div class="w-2 h-2 bg-yellow-500 rounded-full animate-pulse"></div>
+              <span class="text-sm text-gray-400">Manutenzione: 02:00-04:00</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <hr class="border-gray-800 mb-8">
+      
+      <div class="flex flex-col md:flex-row justify-between items-center">
+        <p class="text-gray-500 text-sm mb-4 md:mb-0">
+          © 2025 Chromo Dynamics. Tutti i diritti riservati. | Powered by Innovation
+        </p>
+        
+        <div class="flex space-x-6">
+          <a href="#" class="text-gray-400 hover:text-cyan-400">Privacy Policy</a>
+          <a href="#" class="text-gray-400 hover:text-cyan-400">Termini di Servizio</a>
+          <a href="#" class="text-gray-400 hover:text-cyan-400">Cookie Policy</a>
+        </div>
+      </div>
+
+      <div class="mt-8 text-center">
+        <p class="text-xs text-gray-600">
+          🚀 Versione 2.0.0 | Ultimo aggiornamento: 18 Agosto 2025 | Next update: Championship Series Launch
+        </p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts Avanzati -->
   <script>
-    AOS.init();
+    // ==================== INIZIALIZZAZIONE ====================
+    document.addEventListener('DOMContentLoaded', function() {
+      initializeAll();
+    });
 
-    // Leaderboard data (puoi modificare qui)
-    const leaderboardData = [
-      {name: "NeoRacer", points: 124, wins: 5},
-      {name: "FlashGT", points: 112, wins: 4},
-      {name: "Aurora", points: 98, wins: 2},
-      {name: "Velocity", points: 87, wins: 1},
-      {name: "Lumina", points: 75, wins: 0}
-    ];
+    function initializeAll() {
+      hideLoadingScreen();
+      initParticles();
+      initScrollEffects();
+      initStats();
+      initLeaderboard();
+      initEventUpdates();
+      initTypingEffect();
+      initInteractions();
+    }
 
-    // Render table
-    function renderLeaderboard(data){
-      const tbody = document.querySelector('#board-table tbody');
-      tbody.innerHTML = '';
-      data.forEach((p,i)=>{
-        const tr = document.createElement('tr');
-        tr.innerHTML = `<td>${i+1}</td><td>${p.name}</td><td>${p.points}</td><td>${p.wins}</td>`;
-        tbody.appendChild(tr);
+    // ==================== LOADING & ANIMATIONS ====================
+    function hideLoadingScreen() {
+      setTimeout(() => {
+        document.getElementById('loadingScreen').classList.add('hide');
+      }, 2000);
+    }
+
+    function initParticles() {
+      const canvas = document.getElementById('particles-bg');
+      const ctx = canvas.getContext('2d');
+      
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+      
+      const particles = [];
+      const particleCount = 100;
+      
+      for (let i = 0; i < particleCount; i++) {
+        particles.push({
+          x: Math.random() * canvas.width,
+          y: Math.random() * canvas.height,
+          vx: (Math.random() - 0.5) * 2,
+          vy: (Math.random() - 0.5) * 2,
+          size: Math.random() * 3 + 1,
+          opacity: Math.random() * 0.5 + 0.2
+        });
+      }
+      
+      function animateParticles() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        
+        particles.forEach(particle => {
+          particle.x += particle.vx;
+          particle.y += particle.vy;
+          
+          if (particle.x < 0 || particle.x > canvas.width) particle.vx *= -1;
+          if (particle.y < 0 || particle.y > canvas.height) particle.vy *= -1;
+          
+          ctx.beginPath();
+          ctx.arc(particle.x, particle.y, particle.size, 0, Math.PI * 2);
+          ctx.fillStyle = `rgba(0, 240, 255, ${particle.opacity})`;
+          ctx.fill();
+        });
+        
+        requestAnimationFrame(animateParticles);
+      }
+      
+      animateParticles();
+    }
+
+    // ==================== SCROLL EFFECTS ====================
+    function initScrollEffects() {
+      const navbar = document.getElementById('navbar');
+      const scrollProgress = document.getElementById('scrollProgress');
+      
+      window.addEventListener('scroll', () => {
+        const scrolled = (window.scrollY / (document.body.scrollHeight - window.innerHeight)) * 100;
+        scrollProgress.style.width = scrolled + '%';
+        
+        if (window.scrollY > 100) {
+          navbar.classList.add('scrolled');
+        } else {
+          navbar.classList.remove('scrolled');
+        }
       });
     }
 
-    // Initial render sorted by points desc
-    function sortByPointsDesc(a,b){ return b.points - a.points; }
-    leaderboardData.sort(sortByPointsDesc);
-    renderLeaderboard(leaderboardData);
+    // ==================== STATISTICHE ANIMATE ====================
+    function initStats() {
+      const stats = {
+        membersCount: { target: 2847, current: 0 },
+        racesCount: { target: 156, current: 0 },
+        hoursCount: { target: 12543, current: 0 },
+        prizesCount: { target: 89, current: 0 }
+      };
 
-    // Sorting functions for buttons
-    function sortLeaderboard(mode){
-      const data = [...leaderboardData];
-      if(mode==='points') data.sort((a,b)=>b.points - a.points);
-      else if(mode==='wins') data.sort((a,b)=>b.wins - a.wins);
-      renderLeaderboard(data);
-    }
-    function resetLeaderboard(){ renderLeaderboard(leaderboardData); }
+      function animateStats() {
+        Object.keys(stats).forEach(key => {
+          const element = document.getElementById(key);
+          const stat = stats[key];
+          
+          if (stat.current < stat.target) {
+            stat.current += Math.ceil(stat.target / 100);
+            if (stat.current > stat.target) stat.current = stat.target;
+            element.textContent = stat.current.toLocaleString();
+          }
+        });
+        
+        if (Object.values(stats).some(stat => stat.current < stat.target)) {
+          setTimeout(animateStats, 50);
+        }
+      }
 
-    // Simulate update (demo)
-    function simulateUpdate(){
-      // increment random player's points
-      const idx = Math.floor(Math.random()*leaderboardData.length);
-      leaderboardData[idx].points += Math.floor(Math.random()*20)+1;
-      leaderboardData.sort(sortByPointsDesc);
-      renderLeaderboard(leaderboardData);
+      // Trigger quando visibile
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            animateStats();
+            observer.disconnect();
+          }
+        });
+      });
+      
+      observer.observe(document.getElementById('stats'));
     }
+
+    // ==================== LEADERBOARD DINAMICA ====================
+    function initLeaderboard() {
+      const leaderboardData = [
+        { name: "⚡ NeoRacer", points: 2847, wins: 23, status: "🔴 LIVE" },
+        { name: "🏎️ FlashGT", points: 2654, wins: 19, status: "🟢 Online" },
+        { name: "🌟 Aurora_Speed", points: 2456, wins: 17, status: "🟡 Racing" },
+        { name: "💫 Velocity_X", points: 2334, wins: 15, status: "🟢 Online" },
+        { name: "🔥 Lumina_Pro", points: 2189, wins: 12, status: "⚫ Offline" },
+        { name: "⭐ Thunder_Bolt", points: 2067, wins: 11, status: "🟢 Online" },
+        { name: "🚀 Cosmic_Racer", points: 1945, wins: 9, status: "🟡 Racing" },
+        { name: "💎 Diamond_Drift", points: 1823, wins: 8, status: "🟢 Online" }
+      ];
+
+      function renderLeaderboard() {
+        const tbody = document.getElementById('leaderboardBody');
+        tbody.innerHTML = '';
+        
+        leaderboardData.forEach((player, index) => {
+          const row = document.createElement('tr');
+          row.className = 'hover:bg-cyan-500/10 transition-all duration-300';
+          row.innerHTML = `
+            <td class="font-bold text-yellow-400">${index + 1}</td>
+            <td class="font-bold">${player.name}</td>
+            <td class="text-cyan-400">${player.points.toLocaleString()}</td>
+            <td class="text-purple-400">${player.wins}</td>
+            <td>${player.status}</td>
+          `;
+          tbody.appendChild(row);
+        });
+      }
+
+      renderLeaderboard();
+
+      // Update periodico
+      setInterval(() => {
+        leaderboardData.forEach(player => {
+          if (Math.random() > 0.8) {
+            player.points += Math.floor(Math.random() * 50) + 1;
+            if (Math.random() > 0.9) player.wins += 1;
+          }
+        });
+        leaderboardData.sort((a, b) => b.points - a.points);
+        renderLeaderboard();
+      }, 10000);
+    }
+
+    // ==================== EVENTI LIVE UPDATES ====================
+    function initEventUpdates() {
+      const liveViewers = document.getElementById('liveViewers');
+      const participants1 = document.getElementById('participants1');
+      const registered = document.getElementById('registered');
+
+      function updateLiveData() {
+        // Simula variazioni realistiche
+        const currentViewers = parseInt(liveViewers.textContent.replace(',', ''));
+        const variation = Math.floor(Math.random() * 40) - 20;
+        liveViewers.textContent = Math.max(1000, currentViewers + variation).toLocaleString();
+
+        const currentParticipants = parseInt(participants1.textContent);
+        participants1.textContent = Math.min(200, currentParticipants + Math.floor(Math.random() * 3));
+
+        const currentRegistered = parseInt(registered.textContent.split('/')[0]);
+        registered.textContent = `${Math.min(120, currentRegistered + Math.floor(Math.random() * 2))}/120`;
+      }
+
+      setInterval(updateLiveData, 5000);
+    }
+
+    // ==================== EFFETTO TYPING ====================
+    function initTypingEffect() {
+      const texts = [
+        "La Scuderia Virtuale del Futuro",
+        "Competizione Reale. Emozioni Virtuali.",
+        "Dove Nasce il Prossimo Champion",
+        "Racing Without Limits"
+      ];
+      
+      let textIndex = 0;
+      const typingElement = document.querySelector('.typing-text');
+      
+      function typeText() {
+        const currentText = texts[textIndex];
+        let charIndex = 0;
+        
+        typingElement.textContent = '';
+        
+        const typeInterval = setInterval(() => {
+          typingElement.textContent += currentText[charIndex];
+          charIndex++;
+          
+          if (charIndex === currentText.length) {
+            clearInterval(typeInterval);
+            setTimeout(() => {
+              textIndex = (textIndex + 1) % texts.length;
+              typeText();
+            }, 3000);
+          }
+        }, 100);
+      }
+      
+      setTimeout(typeText, 3000);
+    }
+
+    // ==================== INTERAZIONI ====================
+    function initInteractions() {
+      // Form submissions ora gestiti nativamente da Formspree
+      // Rimuovo i vecchi event listeners JavaScript
+      console.log('✅ Forms collegati a Formspree - invio automatico attivo');
+    }
+
+    // ==================== FUNZIONI UTILITY ====================
+    function showNotification(message, type = 'info') {
+      const notification = document.createElement('div');
+      notification.className = `fixed top-20 right-6 z-50 glass-card max-w-sm transform translate-x-full transition-transform duration-500`;
+      
+      const colors = {
+        success: 'border-green-400/50 bg-green-500/20',
+        error: 'border-red-400/50 bg-red-500/20',
+        info: 'border-blue-400/50 bg-blue-500/20'
+      };
+      
+      notification.classList.add(colors[type]);
+      notification.innerHTML = `
+        <div class="flex items-center justify-between">
+          <p class="text-white">${message}</p>
+          <button onclick="this.parentElement.parentElement.remove()" class="text-gray-400 hover:text-white ml-4">×</button>
+        </div>
+      `;
+      
+      document.body.appendChild(notification);
+      
+      setTimeout(() => notification.classList.remove('translate-x-full'), 100);
+      setTimeout(() => {
+        notification.classList.add('translate-x-full');
+        setTimeout(() => notification.remove(), 500);
+      }, 4000);
+    }
+
+    function scrollToSection(sectionId) {
+      document.getElementById(sectionId).scrollIntoView({ 
+        behavior: 'smooth' 
+      });
+    }
+
+    // ==================== FUNZIONI ECOSISTEMA ====================
+    function showEcosystemDetail(type) {
+      const details = {
+        competition: {
+          title: '🏁 COMPETIZIONE GLOBALE',
+          content: `
+            <div class="grid md:grid-cols-2 gap-6">
+              <div>
+                <h4 class="text-xl font-bold mb-3 text-cyan-400">Campionati Attivi</h4>
+                <ul class="space-y-2 text-gray-300">
+                  <li>• Formula Chromo Championship</li>
+                  <li>• GT Series Virtual</li>
+                  <li>• Endurance Racing League</li>
+                  <li>• Rookie Development Program</li>
+                </ul>
+              </div>
+              <div>
+                <h4 class="text-xl font-bold mb-3 text-purple-400">Premi & Riconoscimenti</h4>
+                <ul class="space-y-2 text-gray-300">
+                  <li>• €5,000 Prize Pool annuale</li>
+                  <li>• Contratti con team reali</li>
+                  <li>• Merchandise esclusivo</li>
+                  <li>• Certificazioni ufficiali</li>
+                </ul>
+              </div>
+            </div>
+          `
+        },
+        community: {
+          title: '👥 COMMUNITY MONDIALE',
+          content: `
+            <div class="grid md:grid-cols-2 gap-6">
+              <div>
+                <h4 class="text-xl font-bold mb-3 text-green-400">Piattaforme Sociali</h4>
+                <ul class="space-y-2 text-gray-300">
+                  <li>• Discord Server (2.8K membri)</li>
+                  <li>• WhatsApp Groups regionali</li>
+                  <li>• Forum dedicato</li>
+                  <li>• Live streaming eventi</li>
+                </ul>
+              </div>
+              <div>
+                <h4 class="text-xl font-bold mb-3 text-yellow-400">Eventi Community</h4>
+                <ul class="space-y-2 text-gray-300">
+                  <li>• Weekly meetup virtuali</li>
+                  <li>• Workshop setup & tuning</li>
+                  <li>• Creator content program</li>
+                  <li>• Mentorship per newcomers</li>
+                </ul>
+              </div>
+            </div>
+          `
+        },
+        tech: {
+          title: '⚡ INNOVAZIONE TECNOLOGICA',
+          content: `
+            <div class="grid md:grid-cols-2 gap-6">
+              <div>
+                <h4 class="text-xl font-bold mb-3 text-blue-400">Tecnologie Attuali</h4>
+                <ul class="space-y-2 text-gray-300">
+                  <li>• Simulazione fisica avanzata</li>
+                  <li>• Telemetria real-time</li>
+                  <li>• AI per analisi performance</li>
+                  <li>• Cloud gaming integration</li>
+                </ul>
+              </div>
+              <div>
+                <h4 class="text-xl font-bold mb-3 text-red-400">Sviluppi Futuri</h4>
+                <ul class="space-y-2 text-gray-300">
+                  <li>• Realtà Virtuale completa</li>
+                  <li>• Motion capture suits</li>
+                  <li>• Blockchain per NFT cars</li>
+                  <li>• Metaverso proprietario</li>
+                </ul>
+              </div>
+            </div>
+          `
+        },
+        events: {
+          title: '🎪 EVENTI SPETTACOLARI',
+          content: `
+            <div class="grid md:grid-cols-2 gap-6">
+              <div>
+                <h4 class="text-xl font-bold mb-3 text-orange-400">Eventi Ricorrenti</h4>
+                <ul class="space-y-2 text-gray-300">
+                  <li>• Monthly Grand Prix</li>
+                  <li>• Seasonal Championships</li>
+                  <li>• Special holiday races</li>
+                  <li>• Celebrity invitational</li>
+                </ul>
+              </div>
+              <div>
+                <h4 class="text-xl font-bold mb-3 text-pink-400">Produzioni Speciali</h4>
+                <ul class="space-y-2 text-gray-300">
+                  <li>• 24h Endurance Live</li>
+                  <li>• Real vs Virtual challenges</li>
+                  <li>• Multi-platform tournaments</li>
+                  <li>• International collaborations</li>
+                </ul>
+              </div>
+            </div>
+          `
+        }
+      };
+
+      const detailSection = document.getElementById('ecosystemDetail');
+      const detailContent = document.getElementById('detailContent');
+      
+      detailContent.innerHTML = `
+        <h3 class="text-3xl font-bold neon-text mb-6">${details[type].title}</h3>
+        ${details[type].content}
+        <div class="mt-8 text-center">
+          <button class="btn-neon mr-4" onclick="joinEcosystem('${type}')">🚀 PARTECIPA</button>
+          <button class="btn-neon" onclick="hideEcosystemDetail()">✕ CHIUDI</button>
+        </div>
+      `;
+      
+      detailSection.classList.remove('hidden');
+      detailSection.scrollIntoView({ behavior: 'smooth' });
+    }
+
+    function hideEcosystemDetail() {
+      document.getElementById('ecosystemDetail').classList.add('hidden');
+    }
+
+    function joinEcosystem(type) {
+      const messages = {
+        competition: 'Ti abbiamo registrato per i prossimi campionati!',
+        community: 'Benvenuto nella community! Controlla la email per i link Discord.',
+        tech: 'Sei stato aggiunto alla beta testing list per le nuove tecnologie!',
+        events: 'Riceverai notifiche per tutti i prossimi eventi speciali!'
+      };
+      
+      showNotification(`🎉 ${messages[type]}`, 'success');
+    }
+
+    // ==================== FUNZIONI TEAM ====================
+    function showMemberProfile(member) {
+      const profiles = {
+        shon: {
+          name: 'Shon Mollah',
+          role: 'Founder & CEO',
+          bio: 'Visionario del progetto, ha trasformato una passione per il gaming in una realtà imprenditoriale. Esperienza in business development e community building.',
+          achievements: ['🏆 Founder of the Year 2025', '🚀 Startup Innovation Award', '👥 Community Builder Expert'],
+          stats: { projects: 12, experience: '5+ anni', team_size: '15 membri' }
+        },
+        mattia: {
+          name: 'Mattia Mameli',
+          role: 'Creative Director',
+          bio: 'Artista digitale e designer con un occhio per il dettaglio. Responsabile di tutta l\'identità visiva del brand e delle comunicazioni creative.',
+          achievements: ['🎨 Best Digital Design 2024', '📱 UI/UX Excellence Award', '🌟 Creative Vision Leader'],
+          stats: { designs: 200, campaigns: 45, awards: 8 }
+        },
+        koyshika: {
+          name: 'Koyshika Mollah',
+          role: 'Art Director',
+          bio: 'Specialista in concept art e direzione artistica. Crea le livree iconiche e l\'estetica futuristica che definisce il nostro stile.',
+          achievements: ['🏎️ Livery Designer of the Year', '🎭 Concept Art Master', '💫 Visual Storyteller Award'],
+          stats: { liveries: 150, concepts: 89, collaborations: 23 }
+        },
+        recruiting: {
+          name: 'Unisciti al Team',
+          role: 'Posizioni Aperte',
+          bio: 'Cerchiamo talenti appassionati per unirsi alla nostra missione. Offriamo un ambiente dinamico, crescita professionale e la possibilità di rivoluzionare il motorsport virtuale.',
+          achievements: ['🚀 Startup Opportunity', '💡 Innovation Culture', '🌍 Global Impact'],
+          stats: { positions: 5, benefits: '∞', growth: 'Unlimited' }
+        }
+      };
+
+      const profile = profiles[member];
+      const modal = document.createElement('div');
+      modal.className = 'fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm';
+      modal.innerHTML = `
+        <div class="glass-card max-w-2xl mx-4 animate-scale-in">
+          <div class="flex items-center justify-between mb-6">
+            <h3 class="text-2xl font-bold neon-text">${profile.name}</h3>
+            <button onclick="this.closest('.fixed').remove()" class="text-gray-400 hover:text-white text-2xl">×</button>
+          </div>
+          
+          <div class="grid md:grid-cols-3 gap-6 mb-6">
+            <div class="md:col-span-2">
+              <p class="text-lg text-cyan-400 mb-3">${profile.role}</p>
+              <p class="text-gray-300 leading-relaxed">${profile.bio}</p>
+            </div>
+            
+            <div class="space-y-4">
+              <div class="bg-black/30 p-4 rounded-lg">
+                <h4 class="font-bold mb-2 text-yellow-400">Stats</h4>
+                ${Object.entries(profile.stats).map(([key, value]) => 
+                  `<div class="flex justify-between text-sm">
+                    <span class="capitalize">${key.replace('_', ' ')}:</span>
+                    <span class="text-cyan-400">${value}</span>
+                  </div>`
+                ).join('')}
+              </div>
+            </div>
+          </div>
+          
+          <div class="mb-6">
+            <h4 class="font-bold mb-3 text-purple-400">🏆 Achievements</h4>
+            <div class="space-y-2">
+              ${profile.achievements.map(achievement => 
+                `<div class="bg-gradient-to-r from-purple-500/20 to-blue-500/20 p-2 rounded">${achievement}</div>`
+              ).join('')}
+            </div>
+          </div>
+          
+          <div class="text-center">
+            ${member === 'recruiting' ? 
+              '<button class="btn-neon" onclick="openRecruiting()">📝 CANDIDATI ORA</button>' :
+              '<button class="btn-neon" onclick="contactMember(\'' + member + '\')">📧 CONTATTA</button>'
+            }
+          </div>
+        </div>
+      `;
+      
+      document.body.appendChild(modal);
+    }
+
+    // ==================== FUNZIONI EVENTI ====================
+    function watchLive() {
+      showNotification('🔴 Streaming live aperto in una nuova finestra!', 'info');
+      // window.open('https://www.youtube.com/@ChromoDynamicsOfficial', '_blank');
+    }
+
+    function showRules(event) {
+      const rules = {
+        monaco: `
+          <h4 class="text-xl font-bold mb-4 text-yellow-400">🏁 REGOLE MONACO TIME ATTACK</h4>
+          <div class="space-y-3 text-gray-300">
+            <p><strong>Obiettivo:</strong> Ottenere il miglior tempo sul giro</p>
+            <p><strong>Auto:</strong> Ferrari 488 GT3 (setup libero)</p>
+            <p><strong>Tentativi:</strong> Massimo 10 giri validi per sessione</p>
+            <p><strong>Validità:</strong> Nessun track limit, nessun contatto con barriere</p>
+            <p><strong>Premi:</strong></p>
+            <ul class="list-disc list-inside ml-4 space-y-1">
+              <li>🥇 1° posto: €500 + Trofeo personalizzato</li>
+              <li>🥈 2° posto: €300 + Merchandise pack</li>
+              <li>🥉 3° posto: €200 + Merchandise pack</li>
+              <li>🏆 Top 10: Certificato ufficiale Chromo Dynamics</li>
+            </ul>
+            <p><strong>Come partecipare:</strong> Invia screenshot del tuo miglior tempo a ChromoDynamicsContact@gmail.com</p>
+          </div>
+        `
+      };
+      
+      showModal('Regolamento Evento', rules[event]);
+    }
+
+    function showSchedule() {
+      const schedule = `
+        <h4 class="text-xl font-bold mb-4 text-blue-400">📅 CALENDARIO CHAMPIONSHIP SERIES</h4>
+        <div class="space-y-4">
+          <div class="bg-black/30 p-4 rounded-lg">
+            <div class="flex justify-between items-center mb-2">
+              <span class="font-bold">Round 1: Monaco GP</span>
+              <span class="text-green-400">30 Ago 2025</span>
+            </div>
+            <p class="text-sm text-gray-400">Circuito: Monaco • Auto: F1 2024</p>
+          </div>
+          
+          <div class="bg-black/30 p-4 rounded-lg">
+            <div class="flex justify-between items-center mb-2">
+              <span class="font-bold">Round 2: Silverstone Classic</span>
+              <span class="text-yellow-400">13 Set 2025</span>
+            </div>
+            <p class="text-sm text-gray-400">Circuito: Silverstone • Auto: GT3 Mix</p>
+          </div>
+          
+          <div class="bg-black/30 p-4 rounded-lg">
+            <div class="flex justify-between items-center mb-2">
+              <span class="font-bold">Round 3: Spa Endurance</span>
+              <span class="text-blue-400">27 Set 2025</span>
+            </div>
+            <p class="text-sm text-gray-400">Circuito: Spa-Francorchamps • Auto: LMP1</p>
+          </div>
+          
+          <div class="text-center mt-6">
+            <p class="text-sm text-gray-400">+ 9 altri round fino a Dicembre 2025</p>
+          </div>
+        </div>
+      `;
+      
+      showModal('Calendario Completo', schedule);
+    }
+
+    function register() {
+      showNotification('📝 Modulo di registrazione inviato! Controlla la email per conferma.', 'success');
+    }
+
+    // ==================== FUNZIONI GLOBALI ====================
+    function openRoblox() {
+      showNotification('🎮 Teletrasporto a Chromo Dynamics...', 'info');
+      window.open('roblox://placeId=126905260413036', '_blank');
+      // Fallback per browser
+      setTimeout(() => {
+        window.open('https://www.roblox.com/games/126905260413036/', '_blank');
+      }, 1000);
+    }
+
+    function showTrailer() {
+      const modal = document.createElement('div');
+      modal.className = 'fixed inset-0 z-50 flex items-center justify-center bg-black/90 backdrop-blur-sm';
+      modal.innerHTML = `
+        <div class="max-w-4xl mx-4">
+          <div class="flex justify-end mb-4">
+            <button onclick="this.closest('.fixed').remove()" class="text-white hover:text-cyan-400 text-2xl">✕</button>
+          </div>
+          <div class="aspect-video">
+            <iframe width="100%" height="100%" src="https://www.youtube.com/embed/M7lc1UVf-VE?autoplay=1" 
+                    frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+          </div>
+        </div>
+      `;
+      document.body.appendChild(modal);
+    }
+
+    function refreshLeaderboard() {
+      showNotification('🔄 Leaderboard aggiornata!', 'info');
+      // La leaderboard si aggiorna automaticamente ogni 10 secondi
+    }
+
+    function openPartnership() {
+      showNotification('📊 Partnership deck scaricato!', 'success');
+      // Simula download del PDF
+    }
+
+    function openRecruiting() {
+      const modal = document.createElement('div');
+      modal.className = 'fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm';
+      modal.innerHTML = `
+        <div class="glass-card max-w-2xl mx-4">
+          <div class="flex items-center justify-between mb-6">
+            <h3 class="text-2xl font-bold neon-text">🚀 Unisciti al Team</h3>
+            <button onclick="this.closest('.fixed').remove()" class="text-gray-400 hover:text-white text-2xl">×</button>
+          </div>
+          
+          <div class="space-y-6">
+            <div>
+              <h4 class="text-lg font-bold text-cyan-400 mb-3">Posizioni Aperte</h4>
+              <div class="space-y-3">
+                <div class="bg-black/30 p-3 rounded-lg flex justify-between items-center">
+                  <div>
+                    <span class="font-bold">Social Media Manager</span>
+                    <p class="text-sm text-gray-400">Gestione canali social e community engagement</p>
+                  </div>
+                  <span class="text-green-400">Remote</span>
+                </div>
+                
+                <div class="bg-black/30 p-3 rounded-lg flex justify-between items-center">
+                  <div>
+                    <span class="font-bold">Event Coordinator</span>
+                    <p class="text-sm text-gray-400">Organizzazione eventi e competizioni</p>
+                  </div>
+                  <span class="text-blue-400">Hybrid</span>
+                </div>
+                
+                <div class="bg-black/30 p-3 rounded-lg flex justify-between items-center">
+                  <div>
+                    <span class="font-bold">Video Editor</span>
+                    <p class="text-sm text-gray-400">Produzione contenuti video per social e eventi</p>
+                  </div>
+                  <span class="text-purple-400">Remote</span>
+                </div>
+              </div>
+            </div>
+            
+            <div class="text-center">
+              <p class="text-gray-300 mb-4">Invia il tuo CV e portfolio a:</p>
+              <a href="mailto:ChromoDynamicsContact@gmail.com?subject=Candidatura%20Team%20Chromo%20Dynamics" 
+                 class="btn-neon">📧 CANDIDATI ORA</a>
+            </div>
+          </div>
+        </div>
+      `;
+      document.body.appendChild(modal);
+    }
+
+    function contactMember(member) {
+      const memberNames = {
+        shon: 'Shon Mollah - CEO',
+        mattia: 'Mattia Mameli - Creative Director',
+        koyshika: 'Koyshika Mollah - Art Director'
+      };
+      const subject = `Contatto per ${memberNames[member] || 'Team Member'}`;
+      window.location.href = `mailto:ChromoDynamicsContact@gmail.com?subject=${encodeURIComponent(subject)}`;
+    }
+
+    function showModal(title, content) {
+      const modal = document.createElement('div');
+      modal.className = 'fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm';
+      modal.innerHTML = `
+        <div class="glass-card max-w-2xl mx-4 max-h-[80vh] overflow-y-auto">
+          <div class="flex items-center justify-between mb-6">
+            <h3 class="text-2xl font-bold neon-text">${title}</h3>
+            <button onclick="this.closest('.fixed').remove()" class="text-gray-400 hover:text-white text-2xl">×</button>
+          </div>
+          <div>${content}</div>
+          <div class="text-center mt-6">
+            <button onclick="this.closest('.fixed').remove()" class="btn-neon">✕ CHIUDI</button>
+          </div>
+        </div>
+      `;
+      document.body.appendChild(modal);
+    }
+
+    function toggleMobileMenu() {
+      // Implementazione menu mobile
+      const mobileMenu = document.querySelector('.nav-right');
+      if (mobileMenu) {
+        mobileMenu.classList.toggle('hidden');
+      }
+    }
+
+    // ==================== EVENT LISTENERS ====================
+    window.addEventListener('resize', () => {
+      const canvas = document.getElementById('particles-bg');
+      if (canvas) {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+      }
+    });
+
+    // Keyboard shortcuts
+    document.addEventListener('keydown', (e) => {
+      if (e.ctrlKey || e.metaKey) {
+        switch(e.key) {
+          case 'h':
+            e.preventDefault();
+            scrollToSection('home');
+            break;
+          case 'e':
+            e.preventDefault();
+            scrollToSection('eventi');
+            break;
+          case 's':
+            e.preventDefault();
+            scrollToSection('stats');
+            break;
+        }
+      }
+    });
+
+    // ==================== CSS ANIMATIONS AGGIUNTIVE ====================
+    const additionalCSS = `
+      <style>
+        @keyframes scale-in {
+          from { transform: scale(0.9); opacity: 0; }
+          to { transform: scale(1); opacity: 1; }
+        }
+        
+        .animate-scale-in {
+          animation: scale-in 0.3s ease-out;
+        }
+        
+        @keyframes glow-pulse {
+          0%, 100% { box-shadow: 0 0 20px rgba(0,240,255,0.5); }
+          50% { box-shadow: 0 0 40px rgba(0,240,255,0.8), 0 0 60px rgba(176,0,255,0.6); }
+        }
+        
+        .glow-pulse {
+          animation: glow-pulse 2s infinite;
+        }
+        
+        .hover-lift:hover {
+          transform: translateY(-5px) scale(1.02);
+          box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+        }
+        
+        .text-glow {
+          text-shadow: 0 0 10px currentColor, 0 0 20px currentColor;
+        }
+      </style>
+    `;
+    
+    document.head.insertAdjacentHTML('beforeend', additionalCSS);
   </script>
 
 </body>
+</html>
