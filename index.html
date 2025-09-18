@@ -372,7 +372,15 @@
     .interactive-zone:hover {
       transform: perspective(1000px) rotateX(10deg) rotateY(10deg);
     }
-  </style>
+  
+    /* Dark mode tweak for body.dark-mode */
+    body.dark-mode {
+      filter: brightness(0.95) contrast(1.05) saturate(1.1);
+      background: linear-gradient(135deg, #040405 0%, #0b1020 50%, #071026 100%);
+    }
+    body.dark-mode .glass-card { background: rgba(255,255,255,0.03); border-color: rgba(0,240,255,0.08); }
+
+</style>
 </head>
 
 <body>
@@ -405,6 +413,35 @@
         <a href="#team" class="nav-link">Team</a>
         <a href="#contatti" class="nav-link">Contatti</a>
       </div>
+
+      <!-- Mobile menu (hidden by default) -->
+      <div id="mobileMenu" class="fixed inset-0 bg-black/80 z-40 hidden md:hidden">
+        <div class="bg-[#071021] w-64 h-full p-6">
+          <div class="flex items-center justify-between mb-6">
+            <div class="flex items-center space-x-3">
+              <div class="w-10 h-10 bg-gradient-to-r from-cyan-400 to-purple-500 rounded-full flex items-center justify-center">
+                <span class="text-white font-bold">CD</span>
+              </div>
+              <span class="neon-text font-bold">Menu</span>
+            </div>
+            <button class="text-white" onclick="toggleMobileMenu()">×</button>
+          </div>
+          <nav class="flex flex-col space-y-4">
+            <a href="#home" class="nav-link" onclick="toggleMobileMenu()">Home</a>
+            <a href="#ecosistema" class="nav-link" onclick="toggleMobileMenu()">Ecosistema</a>
+            <a href="#eventi" class="nav-link" onclick="toggleMobileMenu()">Eventi</a>
+            <a href="#stats" class="nav-link" onclick="toggleMobileMenu()">Stats</a>
+            <a href="#team" class="nav-link" onclick="toggleMobileMenu()">Team</a>
+            <a href="#contatti" class="nav-link" onclick="toggleMobileMenu()">Contatti</a>
+          </nav>
+        </div>
+      </div>
+
+
+        <div class="hidden md:flex items-center space-x-3">
+          <button id="darkModeToggle" class="btn-neon text-sm px-3 py-2" title="Toggle Dark Mode">🌓</button>
+          <button id="langToggle" class="btn-neon text-sm px-3 py-2" title="Toggle Language">IT/EN</button>
+        </div>
 
       <button class="md:hidden text-white" onclick="toggleMobileMenu()">
         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -483,7 +520,19 @@
           </button>
         </div>
         
-        <table class="leaderboard-table" id="leaderboardTable">
+        
+        <div class="flex items-center gap-4 mb-4">
+          <label class="text-sm font-bold text-gray-300">Filtra per status:</label>
+          <select id="leaderboardFilter" class="bg-black/40 border border-cyan-500/20 rounded px-3 py-2 text-white">
+            <option value="all">Tutti</option>
+            <option value="🔴 LIVE">Live</option>
+            <option value="🟢 Online">Online</option>
+            <option value="🟡 Racing">Racing</option>
+            <option value="⚫ Offline">Offline</option>
+          </select>
+          <button class="btn-neon" onclick="clearLeaderboardFilter()">✖</button>
+        </div>
+<table class="leaderboard-table" id="leaderboardTable">
           <thead>
             <tr>
               <th>POS</th>
@@ -767,7 +816,7 @@
 
           <div class="flex gap-4">
             <button class="btn-neon" onclick="window.open('https://www.roblox.com/it/games/126905260413036/Motorsport-Legends-Chromo-Dynamics-Beta-Test', '_blank')">
-  🎮 GIOCA ORA
+  🎮 GIOCA ORA</button>
             <button class="btn-neon" onclick="showTrailer()">🎬 TRAILER</button>
           </div>
         </div>
@@ -812,6 +861,28 @@
   </section>
 
   <!-- Partnership & Sponsor -->
+  
+  <!-- GALLERY / LIVREE -->
+  <section id="gallery" class="py-20 px-6 bg-gradient-to-b from-transparent to-gray-900/20">
+    <div class="container mx-auto">
+      <h2 class="text-5xl font-bold text-center neon-text mb-12">🎨 GALLERY - Livree & Design</h2>
+      <div class="glass-card mb-8">
+        <p class="text-gray-300">Condividi le tue livree. (Upload demo - i file non vengono inviati, è un placeholder frontend.)</p>
+        <div class="mt-4 flex gap-4">
+          <input id="livreaUpload" type="file" accept="image/*" class="text-sm text-gray-300">
+          <button class="btn-neon" onclick="simulateUpload()">⬆️ Carica (Demo)</button>
+        </div>
+      </div>
+
+      <div id="galleryGrid" class="grid md:grid-cols-3 gap-6">
+        <!-- Placeholder images -->
+        <div class="glass-card interactive-zone" onclick="openImageModal(1)"><img src="https://picsum.photos/seed/1/800/600" alt="sample1" class="w-full rounded"/></div>
+        <div class="glass-card interactive-zone" onclick="openImageModal(2)"><img src="https://picsum.photos/seed/2/800/600" alt="sample2" class="w-full rounded"/></div>
+        <div class="glass-card interactive-zone" onclick="openImageModal(3)"><img src="https://picsum.photos/seed/3/800/600" alt="sample3" class="w-full rounded"/></div>
+      </div>
+    </div>
+  </section>
+
   <section class="py-20 px-6">
     <div class="container mx-auto">
       <h2 class="text-5xl font-bold text-center neon-text mb-16">🤝 PARTNERSHIP</h2>
@@ -842,9 +913,31 @@
         <button class="btn-neon" onclick="openPartnership()">
           📊 PROPOSAL DECK
         </button>
+      
+  <!-- SHOP / MERCH -->
+  <section id="shop" class="py-20 px-6 bg-gradient-to-r from-yellow-900/5 to-red-900/5">
+    <div class="container mx-auto">
+      <h2 class="text-5xl font-bold text-center neon-text mb-12">🛒 SHOP - Merchandise Ufficiale</h2>
+      <div class="grid md:grid-cols-3 gap-8">
+        <div class="glass-card text-center">
+          <h3 class="font-bold mb-2">Maglietta Chromo</h3>
+          <p class="text-sm text-gray-300 mb-4">Design ufficiale - Disponibile in vari tagli</p>
+          <button class="btn-neon">Acquista</button>
+        </div>
+        <div class="glass-card text-center">
+          <h3 class="font-bold mb-2">Sticker Pack</h3>
+          <p class="text-sm text-gray-300 mb-4">Kit adesivi per laptop e casco</p>
+          <button class="btn-neon">Acquista</button>
+        </div>
+        <div class="glass-card text-center">
+          <h3 class="font-bold mb-2">Poster Limited</h3>
+          <p class="text-sm text-gray-300 mb-4">Edizione limitata - Firmata dal team</p>
+          <button class="btn-neon">Acquista</button>
+        </div>
       </div>
     </div>
   </section>
+
 
   <!-- Advanced Contact Section -->
   <section id="contatti" class="py-20 px-6 bg-gradient-to-b from-transparent to-gray-900/80">
@@ -1767,7 +1860,122 @@
     `;
     
     document.head.insertAdjacentHTML('beforeend', additionalCSS);
-  </script>
+    // ------------- Extra helper functions added by assistant -------------
+    // Dark mode toggle (simple: toggles a class and stores preference)
+    (function() {
+      const body = document.body;
+      const btn = document.getElementById('darkModeToggle');
+      try {
+        const saved = localStorage.getItem('chromo_dark_mode');
+        if (saved === '1') body.classList.add('dark-mode');
+      } catch(e){}
+      if (btn) {
+        btn.addEventListener('click', () => {
+          body.classList.toggle('dark-mode');
+          try {
+            localStorage.setItem('chromo_dark_mode', body.classList.contains('dark-mode') ? '1' : '0');
+          } catch(e){}
+        });
+      }
+    })();
+
+    // Simple language toggle (placeholder - toggles a data attribute)
+    (function() {
+      const btn = document.getElementById('langToggle');
+      if (!btn) return;
+      let lang = localStorage.getItem('chromo_lang') || 'it';
+      function applyLang() {
+        document.documentElement.lang = lang;
+        btn.textContent = lang.toUpperCase();
+        localStorage.setItem('chromo_lang', lang);
+      }
+      applyLang();
+      btn.addEventListener('click', () => {
+        lang = (lang === 'it' ? 'en' : 'it');
+        applyLang();
+        showNotification('🌐 Lingua: ' + (lang === 'it' ? 'Italiano' : 'English'), 'info');
+      });
+    })();
+
+    // Mobile menu toggle implementation
+    function toggleMobileMenu() {
+      const menu = document.getElementById('mobileMenu');
+      if (!menu) return;
+      menu.classList.toggle('hidden');
+    }
+
+    // Leaderboard filter
+    (function() {
+      const select = document.getElementById('leaderboardFilter');
+      if (!select) return;
+      select.addEventListener('change', () => {
+        filterLeaderboard(select.value);
+      });
+    })();
+
+    function filterLeaderboard(filterValue) {
+      const tbody = document.getElementById('leaderboardBody');
+      if (!tbody) return;
+      const rows = Array.from(tbody.querySelectorAll('tr'));
+      rows.forEach(row => {
+        const statusCell = row.cells[4] && row.cells[4].textContent.trim();
+        if (!statusCell) return;
+        if (filterValue === 'all' || statusCell === filterValue) {
+          row.style.display = '';
+        } else {
+          row.style.display = 'none';
+        }
+      });
+    }
+    function clearLeaderboardFilter() {
+      const sel = document.getElementById('leaderboardFilter');
+      if (sel) sel.value = 'all';
+      filterLeaderboard('all');
+    }
+
+    // Gallery upload simulation + modal viewer
+    function simulateUpload() {
+      const input = document.getElementById('livreaUpload');
+      if (!input || !input.files || input.files.length === 0) {
+        showNotification('⚠️ Seleziona un file prima.', 'error');
+        return;
+      }
+      const file = input.files[0];
+      showNotification('⬆️ Upload mock: ' + file.name, 'success');
+      // For demo we create a temporary object URL and add to gallery grid
+      const grid = document.getElementById('galleryGrid');
+      const url = URL.createObjectURL(file);
+      const div = document.createElement('div');
+      div.className = 'glass-card interactive-zone';
+      div.innerHTML = `<img src="${url}" class="w-full rounded" onclick="openImageModalElement(this)">`;
+      grid.prepend(div);
+      input.value = '';
+    }
+
+    function openImageModal(n) {
+      // Open modal for one of the placeholder pics (n = 1..3)
+      const src = 'https://picsum.photos/seed/' + (n) + '/1200/800';
+      openImageModalElement({ src });
+    }
+    function openImageModalElement(imgEl) {
+      const src = imgEl.src || (imgEl.getAttribute && imgEl.getAttribute('src')) || imgEl;
+      const modal = document.createElement('div');
+      modal.className = 'fixed inset-0 z-50 flex items-center justify-center bg-black/90 backdrop-blur-sm';
+      modal.innerHTML = `
+        <div class="max-w-4xl mx-4">
+          <div class="flex justify-end mb-4">
+            <button onclick="this.closest('.fixed').remove()" class="text-white hover:text-cyan-400 text-2xl">✕</button>
+          </div>
+          <div class="aspect-video">
+            <img src="${src}" style="width:100%;height:auto;border-radius:12px;" />
+          </div>
+        </div>
+      `;
+      document.body.appendChild(modal);
+    }
+    // ---------------------------------------------------------------------
+
+</script>
 
 </body>
 </html>
